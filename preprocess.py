@@ -10,7 +10,7 @@ def preprocess():
     with open(filename) as tsvfile:
         reader = csv.DictReader(tsvfile, dialect='excel-tab')
         for row in reader:
-            if len(row.strip())>0:
+            if len(row.get('Cluster ID'))>0:
                 print(row)
                 exit(0)
 
