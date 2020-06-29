@@ -16,7 +16,7 @@ def preprocess():
                 # print(row)
                 # exit(0)
             else:
-                if len(new_eventlist) > 0:
+                if len(new_eventlist) > 1: # we count one cluster if at least one event there
                     list_of_eventlist.append(new_eventlist)
                 new_eventlist = []
 
