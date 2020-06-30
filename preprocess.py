@@ -140,7 +140,7 @@ def compute_f1(list_of_chain, word2vec):
                         vec_1 = word2vec.get(lemma_1)
                         vec_2 = word2vec.get(lemma_2)
                         if vec_1 is not None and vec_2 is not None:
-                            cos = 1.0-cosine(text_emb, type_emb)
+                            cos = 1.0-cosine(vec_1, vec_2)
                         else:
                             cos = 0.0
 
@@ -182,3 +182,7 @@ def longestSubstringFinder(string1, string2):
 if __name__ == "__main__":
     preprocess()
     # longestSubstringFinder('Confirms', 'confirmed')
+
+'''
+    lemma matching: 41%
+'''
