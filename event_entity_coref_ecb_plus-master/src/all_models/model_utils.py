@@ -12,7 +12,7 @@ from scorer import *
 # from eval_utils import *
 import _pickle as cPickle
 from bcubed_scorer import *
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 from spacy.lang.en import English
 
 for pack in os.listdir("src"):
