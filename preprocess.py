@@ -232,9 +232,18 @@ def wordsimi_wordnet(word1, word2):
             return simi
 
 if __name__ == "__main__":
-    preprocess()
+    # preprocess()
     # longestSubstringFinder('Confirms', 'confirmed')
     # print(wordsimi_wordnet('confirms', 'confirmed'))
+    import ast
+    test_string = 'ARG0 : Prosecutors ; V : used ; ARG1 : DNA evidence ; ARG2 : to show Jeffs fathered a child with a 15 - year - old girl'
+    lis = test_string.split(';')
+    dicts = {}
+    for pair in lis:
+        pairs = pair.split(' : ')
+        dicts[pairs[0].strip()] = pairs[1].strip()
+    print(dicts)
+
 
 '''
     lemma matching: 41%
