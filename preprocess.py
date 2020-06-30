@@ -107,12 +107,12 @@ def compute_f1(list_of_chain):
                         # for word in event_1:
                         #     lemma_1 = word.lemma_
                         #     break
-                        event_1 = event_j.get('Event')
+                        lemma_1 = event_j.get('Event')
                         # event_2 = nlp(event_m.get('Event'))
                         # for word in event_2:
                         #     lemma_2 = word.lemma_
                         #     break
-                        event_2 = event_m.get('Event')
+                        lemma_2 = event_m.get('Event')
                         if lemma_1 == lemma_2:
                             pred_list.append(1)
                         else:
