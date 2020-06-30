@@ -165,7 +165,15 @@ def compute_f1(list_of_chain, word2vec):
                         #     cos = 1.0-cosine(vec_1, vec_2)
                         # else:
                         #     cos = 0.0
-                        cos = wordsimi_wordnet(lemma_1.split()[0], lemma_2.split()[0])
+                        cos = 0.0
+                        for lemma_word_1 in lemma_1.split():
+                            for lemma_word_2 in lemma_2.split():
+                                cos_i = wordsimi_wordnet(lemma_word_1, lemma_word_2)
+                                if cos_i > cos:
+                                    cos = cos_i
+
+
+                        # cos = wordsimi_wordnet(lemma_1.split()[0], lemma_2.split()[0])
                         '''assign a score'''
                         if lemma_1 == lemma_2:
                             pred_list.append(1)
