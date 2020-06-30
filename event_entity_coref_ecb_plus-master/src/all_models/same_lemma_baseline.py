@@ -3,10 +3,10 @@ import gc
 import sys
 import json
 
-for pack in os.listdir("src"):
-    sys.path.append(os.path.join("src", pack))
+# for pack in os.listdir("src"):
+#     sys.path.append(os.path.join("src", pack))
 
-sys.path.append("/src/shared/")
+# sys.path.append("/src/shared/")
 
 import _pickle as cPickle
 import logging
