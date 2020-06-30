@@ -159,18 +159,13 @@ def compute_f1(list_of_chain, word2vec):
                         trigger_2 = event_m.get('Event').lower()
                         # vec_1 = sent_2_emb(trigger_1.split(), word2vec)
                         # vec_2 = sent_2_emb(trigger_2.split(), word2vec)
-                        # vec_1 = sent_2_emb(lemma_1.split(), word2vec)
-                        # vec_2 = sent_2_emb(lemma_2.split(), word2vec)
-                        # if vec_1 is not None and vec_2 is not None:
-                        #     cos = 1.0-cosine(vec_1, vec_2)
-                        # else:
-                        #     cos = 0.0
-                        cos = 0.0
-                        for lemma_word_1 in lemma_1.split():
-                            for lemma_word_2 in lemma_2.split():
-                                cos_i = wordsimi_wordnet(lemma_word_1, lemma_word_2)
-                                if cos_i > cos:
-                                    cos = cos_i
+                        vec_1 = sent_2_emb(lemma_1.split(), word2vec)
+                        vec_2 = sent_2_emb(lemma_2.split(), word2vec)
+                        if vec_1 is not None and vec_2 is not None:
+                            cos = 1.0-cosine(vec_1, vec_2)
+                        else:
+                            cos = 0.0
+
 
 
                         # cos = wordsimi_wordnet(lemma_1.split()[0], lemma_2.split()[0])
