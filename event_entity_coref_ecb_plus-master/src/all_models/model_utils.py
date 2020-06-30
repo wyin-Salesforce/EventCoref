@@ -15,10 +15,9 @@ from bcubed_scorer import *
 # import matplotlib.pyplot as plt
 from spacy.lang.en import English
 
-for pack in os.listdir("src"):
-    sys.path.append(os.path.join("src", pack))
-
-sys.path.append("/src/shared/")
+# for pack in os.listdir("src"):
+#     sys.path.append(os.path.join("src", pack))
+# sys.path.append("/src/shared/")
 
 # from classes import *
 
