@@ -159,32 +159,33 @@ def compute_f1(list_of_chain, word2vec):
                         trigger_2 = event_m.get('Event').lower()
                         # vec_1 = sent_2_emb(trigger_1.split(), word2vec)
                         # vec_2 = sent_2_emb(trigger_2.split(), word2vec)
-                        vec_1 = sent_2_emb(lemma_1.split(), word2vec)
-                        vec_2 = sent_2_emb(lemma_2.split(), word2vec)
-                        if vec_1 is not None and vec_2 is not None:
-                            cos = 1.0-cosine(vec_1, vec_2)
-                        else:
-                            cos = 0.0
+                        # vec_1 = sent_2_emb(lemma_1.split(), word2vec)
+                        # vec_2 = sent_2_emb(lemma_2.split(), word2vec)
+                        # if vec_1 is not None and vec_2 is not None:
+                        #     cos = 1.0-cosine(vec_1, vec_2)
+                        # else:
+                        #     cos = 0.0
+                        cos = wordsimi_wordnet(lemma_1.split()[0], lemma_2.split()[0])
                         '''assign a score'''
                         if lemma_1 == lemma_2:
                             pred_list.append(1)
-                            if i != k: #if lemma the same, but different chain
-                                print('same lemma, different chains, gold:', False)
-                                print('event_j:', event_j)
-                                print('event_m:', event_m)
+                            # if i != k: #if lemma the same, but different chain
+                            #     print('same lemma, different chains, gold:', False)
+                            #     print('event_j:', event_j)
+                            #     print('event_m:', event_m)
                         else:
                             if cos>0.5:
                                 pred_list.append(1)
-                                if i !=k:
-                                    print('different lemma, high similarity ', cos, ', gold: ', i==k )
-                                    print('event_j:', event_j)
-                                    print('event_m:', event_m)
+                                # if i !=k:
+                                #     print('different lemma, high similarity ', cos, ', gold: ', i==k )
+                                #     print('event_j:', event_j)
+                                #     print('event_m:', event_m)
                             else:
                                 pred_list.append(0)
-                                if i ==k:
-                                    print('different lemma, low similarity ', cos, ', gold: ', i==k)
-                                    print('event_j:', event_j)
-                                    print('event_m:', event_m)
+                                # if i ==k:
+                                #     print('different lemma, low similarity ', cos, ', gold: ', i==k)
+                                #     print('event_j:', event_j)
+                                #     print('event_m:', event_m)
 
 
     assert len(gold_list) == len(pred_list)
@@ -228,9 +229,9 @@ def wordsimi_wordnet(word1, word2):
             return simi
 
 if __name__ == "__main__":
-    # preprocess()
+    preprocess()
     # longestSubstringFinder('Confirms', 'confirmed')
-    print(wordsimi_wordnet('confirms', 'confirmed'))
+    # print(wordsimi_wordnet('confirms', 'confirmed'))
 
 '''
     lemma matching: 41%
