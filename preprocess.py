@@ -48,10 +48,11 @@ def preprocess():
                 row['doc_cluster_id'] = doc_cluster_id
 
                 trigger_strings = nlp(row.get('Event'))
+                lemma_list = []
                 for word in trigger_strings:
                     lemma = word.lemma_
-                    break
-                row['lemma'] = lemma
+                    lemma_list.append(lemma)
+                row['lemma'] = ' '.join(lemma_list)
 
 
                 doc_clusters.add(doc_cluster_id)
