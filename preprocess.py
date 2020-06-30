@@ -143,25 +143,10 @@ def compute_f1(list_of_chain, word2vec):
                     if i==k and j==m: #the same events:
                         pred_list.append(1)
                     else:
-                        # event_1 = nlp(event_j.get('Event'))
-                        # for word in event_1:
-                        #     lemma_1 = word.lemma_
-                        #     break
                         lemma_1 = event_j.get('lemma')
                         trigger_1 = event_j.get('Event').lower()
-                        # event_2 = nlp(event_m.get('Event'))
-                        # for word in event_2:
-                        #     lemma_2 = word.lemma_
-                        #     break
                         lemma_2 = event_m.get('lemma')
                         trigger_2 = event_m.get('Event').lower()
-                        # common_substring = longestSubstringFinder(lemma_1, lemma_2)
-                        # if len(common_substring)/len(lemma_1) > 0.3 or len(common_substring)/len(lemma_2) > 0.3:
-                        #     pred_list.append(1)
-                        # else:
-                        #     pred_list.append(0)
-                        # vec_1 = word2vec.get(trigger_1)
-                        # vec_2 = word2vec.get(trigger_2)
                         vec_1 = sent_2_emb(trigger_1.split(), word2vec)
                         vec_2 = sent_2_emb(trigger_2.split(), word2vec)
                         if vec_1 is not None and vec_2 is not None:
@@ -171,11 +156,21 @@ def compute_f1(list_of_chain, word2vec):
                         '''assign a score'''
                         if lemma_1 == lemma_2:
                             pred_list.append(1)
+                            if i != k: #if lemma the same, but different chain
+                                print('same lemma, different chains')
+                                print('event_j:', event_j)
+                                print('event_m:', event_m)
                         else:
                             if cos>0.5:
                                 pred_list.append(1)
+                                print('different lemma, high similarity events')
+                                print('event_j:', event_j)
+                                print('event_m:', event_m)
                             else:
                                 pred_list.append(0)
+                                print('different lemma, low similarity events')
+                                print('event_j:', event_j)
+                                print('event_m:', event_m)
 
 
     assert len(gold_list) == len(pred_list)
