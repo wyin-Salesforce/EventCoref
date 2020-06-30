@@ -84,6 +84,7 @@ def preprocess():
     print('mean_f1:', mean_f1)
 
 def compute_f1(list_of_chain):
+    print('doc cluster has chain size:', len(list_of_chain), [print(len(chain)) for chain in list_of_chain])
     gold_list = []
     pred_list = []
     for i, chain_i in enumerate(list_of_chain):
