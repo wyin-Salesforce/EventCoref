@@ -230,7 +230,7 @@ def wordsimi_wordnet(word1, word2):
 if __name__ == "__main__":
     # preprocess()
     # longestSubstringFinder('Confirms', 'confirmed')
-    print(wordsimi_wordnet('want', 'refute'))
+    print(wordsimi_wordnet('confirms', 'confirmed'))
 
 '''
     lemma matching: 41%
