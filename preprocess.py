@@ -78,14 +78,19 @@ def preprocess():
 
     overall_f1 = 0.0
     for cluster_i in all_clusters:
-        print('cluster_i:', cluster_i)
-        exit(0)
+        # print('cluster_i:', cluster_i)
+        # exit(0)
         f1 = compute_f1(cluster_i)
         overall_f1+=f1
     mean_f1 = overall_f1/len(all_clusters)
     print('mean_f1:', mean_f1)
 
 def compute_f1(list_of_chain):
+    print('list_of_chain:', list_of_chain)
+    for chain in list_of_chain:
+        print(len(chain))
+    exit(0)
+
     print('doc cluster has chain size:', len(list_of_chain), [print(len(chain)) for chain in list_of_chain])
     gold_list = []
     pred_list = []
