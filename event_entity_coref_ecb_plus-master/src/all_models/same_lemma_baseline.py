@@ -11,7 +11,7 @@ import json
 import _pickle as cPickle
 import logging
 import argparse
-from classes import *
+# from classes import *
 from model_utils import *
 
 parser = argparse.ArgumentParser(description='Run same lemma baseline')
@@ -31,7 +31,7 @@ with open(args.config_path, 'r') as js_file:
 with open(os.path.join(args.out_dir,'lemma_baseline_config.json'), "w") as js_file:
     json.dump(config_dict, js_file, indent=4, sort_keys=True)
 
-from classes import *
+# from classes import *
 from model_utils import *
 from eval_utils import *
 
@@ -141,3 +141,8 @@ if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
     logger = logging.getLogger(__name__)
     main()
+
+
+'''
+python same_lemma_baseline.py --config_path ../../test_config.json --out_dir wenpeng/
+'''
