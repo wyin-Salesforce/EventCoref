@@ -35,7 +35,6 @@ with open(os.path.join(args.out_dir,'lemma_baseline_config.json'), "w") as js_fi
 from model_utils import *
 # from eval_utils import *
 
-
 def get_clusters_by_head_lemma(mentions, is_event):
     '''
     Given a list of mentions, this function clusters mentions that share the same head lemma.
