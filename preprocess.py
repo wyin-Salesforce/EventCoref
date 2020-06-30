@@ -149,5 +149,5 @@ def longestSubstringFinder(string1, string2):
 
 
 if __name__ == "__main__":
-    # preprocess()
-    longestSubstringFinder('Confirms', 'confirmed')
+    preprocess()
+    # longestSubstringFinder('Confirms', 'confirmed')
