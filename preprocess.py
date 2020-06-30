@@ -3,8 +3,11 @@ import csv
 from scipy.spatial.distance import cosine
 import numpy as np
 import en_core_web_sm
+import nltk
+
 from nltk.corpus import wordnet as wn
 nlp = en_core_web_sm.load()
+nltk.download('wordnet')
 
 def load_word2vec():
     word2vec = {}
