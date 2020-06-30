@@ -86,11 +86,11 @@ def preprocess():
 def compute_f1(list_of_chain):
     gold_list = []
     pred_list = []
-    for i, chain_i in list_of_chain:
-        for j, event_j in chain_i:
+    for i, chain_i in enumerate(list_of_chain):
+        for j, event_j in enumerate(chain_i):
             #iter again
-            for k, chain_k in list_of_chain:
-                for m, event_m in chain_k:
+            for k, chain_k in enumerate(list_of_chain):
+                for m, event_m in enumerate(chain_k):
                     if i==k:
                         gold_list.append(1)
                     else:
