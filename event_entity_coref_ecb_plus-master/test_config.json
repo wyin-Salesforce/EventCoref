@@ -1,4 +1,4 @@
-{"test_path":"/export/home/Dataset/EventCoref/processed/cybulska_setup/full_swirl_ecb/test_data",
+{"test_path":"/export/home/Dataset/EventCoref/processed/full_swirl_ecb/test_data",
 
   "cd_event_model_path": "models/cybulska_setup/cd_event_best_model",
   "cd_entity_model_path": "models/cybulska_setup/cd_entity_best_model",
