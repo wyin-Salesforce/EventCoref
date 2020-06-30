@@ -113,10 +113,15 @@ def compute_f1(list_of_chain):
                         #     lemma_2 = word.lemma_
                         #     break
                         lemma_2 = event_m.get('Event').lower()
-                        if lemma_1 == lemma_2:
+                        common_substring = longestSubstringFinder(lemma_1, lemma_2)
+                        if len(common_substring)/len(lemma_1) > 0.5 or len(common_substring)/len(lemma_2) > 0.5:
                             pred_list.append(1)
                         else:
                             pred_list.append(0)
+                        # if lemma_1 == lemma_2:
+                        #     pred_list.append(1)
+                        # else:
+                        #     pred_list.append(0)
     assert len(gold_list) == len(pred_list)
 
     overlap = 0
@@ -140,7 +145,6 @@ def longestSubstringFinder(string1, string2):
             else:
                 if (len(match) > len(answer)): answer = match
                 match = ""
-    print(answer)
     return answer
 
 
