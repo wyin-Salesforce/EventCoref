@@ -148,13 +148,13 @@ def compute_f1(list_of_chain, word2vec):
                         #     lemma_1 = word.lemma_
                         #     break
                         lemma_1 = event_j.get('lemma')
-                        trigger_1 = event_j.get('Event').lower()
+                        trigger_1 = event_j.get('Event')#.lower()
                         # event_2 = nlp(event_m.get('Event'))
                         # for word in event_2:
                         #     lemma_2 = word.lemma_
                         #     break
                         lemma_2 = event_m.get('lemma')
-                        trigger_2 = event_m.get('Event').lower()
+                        trigger_2 = event_m.get('Event')#.lower()
                         # common_substring = longestSubstringFinder(lemma_1, lemma_2)
                         # if len(common_substring)/len(lemma_1) > 0.3 or len(common_substring)/len(lemma_2) > 0.3:
                         #     pred_list.append(1)
@@ -213,4 +213,5 @@ if __name__ == "__main__":
     cosine >0.3: 43%
     cosine >0.4: 49.40%
     cosine >0.5: 49.02%
+    vector comes from trigger sentence: 54.58%
 '''
