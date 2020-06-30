@@ -1,7 +1,7 @@
 
 import csv
 from scipy.spatial.distance import cosine
-
+import numpy as np
 import en_core_web_sm
 nlp = en_core_web_sm.load()
 
@@ -22,6 +22,18 @@ def load_word2vec():
         #     break
     print("==> word2vec is loaded")
     return word2vec
+
+def sent_2_emb(wordlist):
+    emb_list = []
+    for word in wordlist:
+        emb = word2vec.get(word, None)
+        if emb is not None:
+            emb_list.append(emb)
+    if len(emb_list) > 0:
+        arr = np.array(emb_list)
+        return np.sum(arr, axis=0)
+    else:
+        return np.array([0.0]*300)
 
 def preprocess():
     word2vec = load_word2vec()
@@ -148,8 +160,10 @@ def compute_f1(list_of_chain, word2vec):
                         #     pred_list.append(1)
                         # else:
                         #     pred_list.append(0)
-                        vec_1 = word2vec.get(trigger_1)
-                        vec_2 = word2vec.get(trigger_2)
+                        # vec_1 = word2vec.get(trigger_1)
+                        # vec_2 = word2vec.get(trigger_2)
+                        vec_1 = sent_2_emb(trigger_1.split())
+                        vec_2 = sent_2_emb(trigger_2.split())
                         if vec_1 is not None and vec_2 is not None:
                             cos = 1.0-cosine(vec_1, vec_2)
                         else:
