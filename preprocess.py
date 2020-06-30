@@ -157,18 +157,18 @@ def compute_f1(list_of_chain, word2vec):
                         if lemma_1 == lemma_2:
                             pred_list.append(1)
                             if i != k: #if lemma the same, but different chain
-                                print('same lemma, different chains')
+                                print('same lemma, different chains, gold:', False)
                                 print('event_j:', event_j)
                                 print('event_m:', event_m)
                         else:
                             if cos>0.5:
                                 pred_list.append(1)
-                                print('different lemma, high similarity events')
+                                print('different lemma, high similarity events, gold: ', i==k )
                                 print('event_j:', event_j)
                                 print('event_m:', event_m)
                             else:
                                 pred_list.append(0)
-                                print('different lemma, low similarity events')
+                                print('different lemma, low similarity events, gold: ', i==k)
                                 print('event_j:', event_j)
                                 print('event_m:', event_m)
 
