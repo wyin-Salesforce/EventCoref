@@ -140,6 +140,7 @@ def longestSubstringFinder(string1, string2):
             else:
                 if (len(match) > len(answer)): answer = match
                 match = ""
+    print(answer)
     return answer
 
 
