@@ -129,8 +129,20 @@ def compute_f1(list_of_chain):
     print('current f1:', f1)
     return f1
 
-
+def longestSubstringFinder(string1, string2):
+    answer = ""
+    len1, len2 = len(string1), len(string2)
+    for i in range(len1):
+        match = ""
+        for j in range(len2):
+            if (i + j < len1 and string1[i + j] == string2[j]):
+                match += string2[j]
+            else:
+                if (len(match) > len(answer)): answer = match
+                match = ""
+    return answer
 
 
 if __name__ == "__main__":
-    preprocess()
+    # preprocess()
+    longestSubstringFinder('Confirms', 'confirmed')
