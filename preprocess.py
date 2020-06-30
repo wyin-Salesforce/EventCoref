@@ -114,7 +114,7 @@ def compute_f1(list_of_chain):
                         #     break
                         lemma_2 = event_m.get('Event').lower()
                         common_substring = longestSubstringFinder(lemma_1, lemma_2)
-                        if len(common_substring)/len(lemma_1) > 0.8 or len(common_substring)/len(lemma_2) > 0.8:
+                        if len(common_substring)/len(lemma_1) > 0.3 or len(common_substring)/len(lemma_2) > 0.3:
                             pred_list.append(1)
                         else:
                             pred_list.append(0)
