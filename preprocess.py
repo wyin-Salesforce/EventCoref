@@ -1,11 +1,30 @@
 
 import csv
-
+from scipy.spatial.distance import cosine
 
 import en_core_web_sm
 nlp = en_core_web_sm.load()
 
+def load_word2vec():
+    word2vec = {}
+
+    print("==> loading 300d word2vec")
+
+    f=open('/export/home/Dataset/word2vec_words_300d.txt', 'r')#glove.6B.300d.txt, word2vec_words_300d.txt, glove.840B.300d.txt
+    co = 0
+    for line in f:
+        l = line.split()
+        word2vec[l[0]] = list(map(float, l[1:]))
+        co+=1
+        if co % 50000 == 0:
+            print('loading w2v size:', co)
+        # if co % 10000 == 0:
+        #     break
+    print("==> word2vec is loaded")
+    return word2vec
+
 def preprocess():
+    word2vec = load_word2vec()
     filename = '/export/home/Dataset/EventCoref/test.only.tsv'
     cluster_36 = []
     cluster_37 = []
@@ -80,12 +99,12 @@ def preprocess():
     for cluster_i in all_clusters:
         # print('cluster_i:', cluster_i)
         # exit(0)
-        f1 = compute_f1(cluster_i)
+        f1 = compute_f1(cluster_i, word2vec)
         overall_f1+=f1
     mean_f1 = overall_f1/len(all_clusters)
     print('mean_f1:', mean_f1)
 
-def compute_f1(list_of_chain):
+def compute_f1(list_of_chain, word2vec):
 
     print('doc cluster has chain size:', len(list_of_chain), [len(chain) for chain in list_of_chain])
     gold_list = []
@@ -118,10 +137,22 @@ def compute_f1(list_of_chain):
                         #     pred_list.append(1)
                         # else:
                         #     pred_list.append(0)
+                        vec_1 = word2vec.get(lemma_1)
+                        vec_2 = word2vec.get(lemma_2)
+                        if vec_1 is not None and vec_2 is not None:
+                            cos = 1.0-cosine(text_emb, type_emb)
+                        else:
+                            cos = 0.0
+
                         if lemma_1 == lemma_2:
                             pred_list.append(1)
                         else:
-                            pred_list.append(0)
+                            if cos>0.3:
+                                pred_list.append(1)
+                            else:
+                                pred_list.append(0)
+
+
     assert len(gold_list) == len(pred_list)
 
     overlap = 0
