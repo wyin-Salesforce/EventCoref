@@ -23,7 +23,7 @@ def load_word2vec():
     print("==> word2vec is loaded")
     return word2vec
 
-def sent_2_emb(wordlist):
+def sent_2_emb(wordlist, word2vec):
     emb_list = []
     for word in wordlist:
         emb = word2vec.get(word, None)
@@ -162,8 +162,8 @@ def compute_f1(list_of_chain, word2vec):
                         #     pred_list.append(0)
                         # vec_1 = word2vec.get(trigger_1)
                         # vec_2 = word2vec.get(trigger_2)
-                        vec_1 = sent_2_emb(trigger_1.split())
-                        vec_2 = sent_2_emb(trigger_2.split())
+                        vec_1 = sent_2_emb(trigger_1.split(), word2vec)
+                        vec_2 = sent_2_emb(trigger_2.split(), word2vec)
                         if vec_1 is not None and vec_2 is not None:
                             cos = 1.0-cosine(vec_1, vec_2)
                         else:
