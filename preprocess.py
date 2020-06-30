@@ -3,6 +3,7 @@ import csv
 from scipy.spatial.distance import cosine
 import numpy as np
 import en_core_web_sm
+from nltk.corpus import wordnet as wn
 nlp = en_core_web_sm.load()
 
 def load_word2vec():
@@ -208,10 +209,25 @@ def longestSubstringFinder(string1, string2):
                 match = ""
     return answer
 
+def wordsimi_wordnet(word1, word2):
+    # print('word1:', word1, 'wn.synsets(word1):', wn.synsets(word1))
+    word1_syn = wn.synsets(word1)
+    word2_syn = wn.synsets(word2)
+    if len(word1_syn) == 0 or len(word2_syn) ==0:
+        return 0.0
+    else:
+        word1 = word1_syn[0]
+        word2 = word2_syn[0]
+        simi = word1.wup_similarity(word2)
+        if simi is None:
+            return 0.0
+        else:
+            return simi
 
 if __name__ == "__main__":
-    preprocess()
+    # preprocess()
     # longestSubstringFinder('Confirms', 'confirmed')
+    wordsimi_wordnet('want', 'refute')
 
 '''
     lemma matching: 41%
