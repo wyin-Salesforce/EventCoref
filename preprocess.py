@@ -58,9 +58,9 @@ def preprocess():
                 new_eventlist = []
 
     tsvfile.close()
-    print('cluster size:', len(list_of_eventlist))
-    for eventlit in list_of_eventlist:
-        print('size in each cluster:', len(eventlit))
+    # print('cluster size:', len(list_of_eventlist))
+    # for eventlit in list_of_eventlist:
+    #     print('size in each cluster:', len(eventlit))
 
     print('doc_clusters:', doc_clusters)
 
