@@ -147,7 +147,7 @@ def compute_f1(list_of_chain, word2vec):
                         if lemma_1 == lemma_2:
                             pred_list.append(1)
                         else:
-                            if cos>0.2:
+                            if cos>0.4:
                                 pred_list.append(1)
                             else:
                                 pred_list.append(0)
@@ -186,4 +186,5 @@ if __name__ == "__main__":
 '''
     lemma matching: 41%
     cosine >0.3: 43%
+    cosine >0.2: 35.86
 '''
