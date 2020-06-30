@@ -140,7 +140,7 @@ def compute_f1(list_of_chain, word2vec):
                         # for word in event_2:
                         #     lemma_2 = word.lemma_
                         #     break
-                        lemma_1 = event_m.get('lemma')
+                        lemma_2 = event_m.get('lemma')
                         trigger_2 = event_m.get('Event').lower()
                         # common_substring = longestSubstringFinder(lemma_1, lemma_2)
                         # if len(common_substring)/len(lemma_1) > 0.3 or len(common_substring)/len(lemma_2) > 0.3:
