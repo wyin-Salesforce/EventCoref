@@ -78,6 +78,8 @@ def preprocess():
 
     overall_f1 = 0.0
     for cluster_i in all_clusters:
+        print('cluster_i:', cluster_i)
+        exit(0)
         f1 = compute_f1(cluster_i)
         overall_f1+=f1
     mean_f1 = overall_f1/len(all_clusters)
