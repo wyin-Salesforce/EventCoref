@@ -9,7 +9,7 @@ import itertools
 import collections
 import numpy as np
 from scorer import *
-from eval_utils import *
+# from eval_utils import *
 import _pickle as cPickle
 from bcubed_scorer import *
 import matplotlib.pyplot as plt
@@ -20,7 +20,7 @@ for pack in os.listdir("src"):
 
 sys.path.append("/src/shared/")
 
-from classes import *
+# from classes import *
 
 clusters_count = 1
 
