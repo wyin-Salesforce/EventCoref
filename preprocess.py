@@ -172,7 +172,7 @@ def compute_f1(list_of_chain, word2vec):
                         if lemma_1 == lemma_2:
                             pred_list.append(1)
                         else:
-                            if cos>0.4:
+                            if cos>0.5:
                                 pred_list.append(1)
                             else:
                                 pred_list.append(0)
