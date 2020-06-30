@@ -163,14 +163,16 @@ def compute_f1(list_of_chain, word2vec):
                         else:
                             if cos>0.5:
                                 pred_list.append(1)
-                                print('different lemma, high similarity events, gold: ', i==k )
-                                print('event_j:', event_j)
-                                print('event_m:', event_m)
+                                if i !=k:
+                                    print('different lemma, high similarity events, gold: ', i==k )
+                                    print('event_j:', event_j)
+                                    print('event_m:', event_m)
                             else:
                                 pred_list.append(0)
-                                print('different lemma, low similarity events, gold: ', i==k)
-                                print('event_j:', event_j)
-                                print('event_m:', event_m)
+                                if i ==k:
+                                    print('different lemma, low similarity events, gold: ', i==k)
+                                    print('event_j:', event_j)
+                                    print('event_m:', event_m)
 
 
     assert len(gold_list) == len(pred_list)
