@@ -11,7 +11,7 @@ import json
 import _pickle as cPickle
 import logging
 import argparse
-# from classes import *
+from ../shared/classes import *
 from model_utils import *
 
 parser = argparse.ArgumentParser(description='Run same lemma baseline')

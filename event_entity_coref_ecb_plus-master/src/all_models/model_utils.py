@@ -19,7 +19,7 @@ from spacy.lang.en import English
 #     sys.path.append(os.path.join("src", pack))
 # sys.path.append("/src/shared/")
 
-# from classes import *
+from ../shared/classes import *
 
 clusters_count = 1
 
