@@ -147,8 +147,10 @@ def compute_f1(list_of_chain, word2vec):
                         trigger_1 = event_j.get('Event').lower()
                         lemma_2 = event_m.get('lemma')
                         trigger_2 = event_m.get('Event').lower()
-                        vec_1 = sent_2_emb(trigger_1.split(), word2vec)
-                        vec_2 = sent_2_emb(trigger_2.split(), word2vec)
+                        # vec_1 = sent_2_emb(trigger_1.split(), word2vec)
+                        # vec_2 = sent_2_emb(trigger_2.split(), word2vec)
+                        vec_1 = sent_2_emb(lemma_1.split(), word2vec)
+                        vec_2 = sent_2_emb(lemma_2.split(), word2vec)
                         if vec_1 is not None and vec_2 is not None:
                             cos = 1.0-cosine(vec_1, vec_2)
                         else:
@@ -164,13 +166,13 @@ def compute_f1(list_of_chain, word2vec):
                             if cos>0.5:
                                 pred_list.append(1)
                                 if i !=k:
-                                    print('different lemma, high similarity events, gold: ', i==k )
+                                    print('different lemma, high similarity ', cos, ', gold: ', i==k )
                                     print('event_j:', event_j)
                                     print('event_m:', event_m)
                             else:
                                 pred_list.append(0)
                                 if i ==k:
-                                    print('different lemma, low similarity events, gold: ', i==k)
+                                    print('different lemma, low similarity ', cos, ', gold: ', i==k)
                                     print('event_j:', event_j)
                                     print('event_m:', event_m)
 
