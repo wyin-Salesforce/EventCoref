@@ -46,6 +46,14 @@ def preprocess():
             if len(row.get('Cluster ID'))>0:
                 doc_cluster_id = int(row.get('Document').split('_')[0])
                 row['doc_cluster_id'] = doc_cluster_id
+
+                trigger_strings = nlp(row.get('Event'))
+                for word in trigger_strings:
+                    lemma = word.lemma_
+                    break
+                row['lemma'] = lemma
+
+
                 doc_clusters.add(doc_cluster_id)
                 new_eventlist.append(row)
                 # print(row)
@@ -126,19 +134,21 @@ def compute_f1(list_of_chain, word2vec):
                         # for word in event_1:
                         #     lemma_1 = word.lemma_
                         #     break
-                        lemma_1 = event_j.get('Event').lower()
+                        lemma_1 = event_j.get('lemma')
+                        trigger_1 = event_j.get('Event').lower()
                         # event_2 = nlp(event_m.get('Event'))
                         # for word in event_2:
                         #     lemma_2 = word.lemma_
                         #     break
-                        lemma_2 = event_m.get('Event').lower()
+                        lemma_1 = event_m.get('lemma')
+                        trigger_2 = event_m.get('Event').lower()
                         # common_substring = longestSubstringFinder(lemma_1, lemma_2)
                         # if len(common_substring)/len(lemma_1) > 0.3 or len(common_substring)/len(lemma_2) > 0.3:
                         #     pred_list.append(1)
                         # else:
                         #     pred_list.append(0)
-                        vec_1 = word2vec.get(lemma_1)
-                        vec_2 = word2vec.get(lemma_2)
+                        vec_1 = word2vec.get(trigger_1)
+                        vec_2 = word2vec.get(trigger_2)
                         if vec_1 is not None and vec_2 is not None:
                             cos = 1.0-cosine(vec_1, vec_2)
                         else:
@@ -187,4 +197,5 @@ if __name__ == "__main__":
     lemma matching: 41%
     cosine >0.3: 43%
     cosine >0.4: 49.40%
+    cosine >0.5: 49.02%
 '''
