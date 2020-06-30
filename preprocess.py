@@ -148,11 +148,11 @@ def compute_f1(list_of_chain, word2vec):
                         pred_list.append(1)
                     else:
 
-                        SRL_1 = event_j.get('SRL output')
-                        SRL_2 = event_m.get('SRL output')
-                        print('SRL_1:', SRL_1)
-                        print('SRL_2:', SRL_2)
-                        exit(0)
+                        # SRL_1 = event_j.get('SRL output')
+                        # SRL_2 = event_m.get('SRL output')
+                        # print('SRL_1:', SRL_1)
+                        # print('SRL_2:', SRL_2)
+                        # exit(0)
                         lemma_1 = event_j.get('lemma')
                         trigger_1 = event_j.get('Event').lower()
                         lemma_2 = event_m.get('lemma')
