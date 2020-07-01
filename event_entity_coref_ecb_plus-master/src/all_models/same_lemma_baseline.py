@@ -98,32 +98,47 @@ def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
     '''all mentioned has been grouped by same lemma; now we combine groups if their lemmas have high embedding similarity'''
     lemmas_be_taken_in=set()
     all_lemma_list = list(mentions_by_head_lemma.keys())
-    for i in range(len(all_lemma_list)):
-        lemma_i = all_lemma_list[i]
-        if lemma_i in lemmas_be_taken_in:
-            continue
-        for j in range(i+1, len(all_lemma_list)):
-            lemma_j = all_lemma_list[j]
-            if lemma_j in lemmas_be_taken_in:
-                continue
-            if lemma_i != lemma_j:
-                vec_i = word2vec.get(lemma_i)
+
+    list_of_list_lemmas=[]
+    list_of_list_lemmas.append([all_lemma_list[0]])
+    for lemma_i in all_lemma_list[1:]:
+        vec_i = word2vec.get(lemma_i)
+        max_list_index = -1
+        max_similarity = -10.0
+        for list_index, existing_lemma_list in enumerate(list_of_list_lemmas):
+            max_similarity_from_list = 0.0
+            for lemma_j in existing_lemma_list:
                 vec_j = word2vec.get(lemma_j)
                 if vec_i is not None and vec_j is not None:
                     cos = 1.0-cosine(vec_i, vec_j)
                 else:
                     cos = 0.0
-                if cos > 0.8:
-                    '''combine two lists of mentions'''
-                    new_mention_list = mentions_by_head_lemma.get(lemma_i)+mentions_by_head_lemma.get(lemma_j)
-                    mentions_by_head_lemma[lemma_i] = new_mention_list
-                    lemmas_be_taken_in.add(lemma_j)
+                if cos > max_similarity_from_list:
+                    max_similarity_from_list = cos
+            if max_similarity_from_list > max_similarity:
+                max_similarity = max_similarity_from_list
+                max_list_index = list_index
+
+        '''lemma_i start a new list'''
+        if max_similarity < 0.5:
+            list_of_list_lemmas.append([lemma_i])
+        else:
+            '''if means lemma_i should be put in max_list_index'''
+            if max_list_index > -1:
+                list_of_list_lemmas[max_list_index].append(lemma_i)
+    '''now combine the lemma list of clustered lemmas'''
+    new_mentions_by_head_lemma = {}
+    for lemma_list in list_of_list_lemmas:
+        combine_lemma_list = []
+        for lemma_i in lemma_list:
+            combine_lemma_list+=mentions_by_head_lemma.get(lemma_i)
+        new_mentions_by_head_lemma[lemma_list[0]] = combine_lemma_list
 
 
-    for key in lemmas_be_taken_in:
-        del mentions_by_head_lemma[key]
 
-    for head_lemma, mentions in mentions_by_head_lemma.items():
+
+    # for head_lemma, mentions in mentions_by_head_lemma.items():
+    for head_lemma, mentions in new_mentions_by_head_lemma.items():
         cluster = Cluster(is_event=is_event)
         for mention in mentions:
             cluster.mentions[mention.mention_id] = mention
