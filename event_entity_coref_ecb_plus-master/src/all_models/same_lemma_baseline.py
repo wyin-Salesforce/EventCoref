@@ -108,10 +108,10 @@ def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
                 mention_j_amtmp = mention_j.amtmp[0] if mention_j.amtmp is not None else None
                 mention_j_amloc = mention_j.amloc[0] if mention_j.amloc is not None else None
                 if mention_i.mention_head_lemma == mention_j.mention_head_lemma:
-                    if (mention_i_arg1 is not None and mention_j_arg1 is not None) and (mention_i_arg1 != mention_j_arg1) or /
-                        (mention_i_arg2 is not None and mention_j_arg2 is not None) and (mention_i_arg2 != mention_j_arg2):
+                    if ((mention_i_arg1 is not None and mention_j_arg1 is not None) and (mention_i_arg1 != mention_j_arg1) or
+                        (mention_i_arg2 is not None and mention_j_arg2 is not None) and (mention_i_arg2 != mention_j_arg2)):
                         continue
-                        
+
                     '''put in this list'''
                     list_of_list_mention[list_id].append(mention_i)
                     insert=True
