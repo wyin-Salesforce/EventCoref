@@ -113,7 +113,10 @@ def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
         mention_i_amtmp = mention_i.amtmp[0] if mention_i.amtmp is not None else None
         mention_i_amloc = mention_i.amloc[0] if mention_i.amloc is not None else None
         mention_i_str = mention_i.mention_str
+        mention_i_full_str = ' '.join([mention_i_arg1, mention_i_str, mention_i_arg2])
         mention_i_str_emb = sent_2_emb(mention_i_str.lower().split(), word2vec)
+        mention_i_full_str_emb = sent_2_emb(mention_i_full_str.lower().split(), word2vec)
+
 
 
         for list_id, mention_list in enumerate(list_of_list_mention):
@@ -124,7 +127,10 @@ def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
                 mention_j_amtmp = mention_j.amtmp[0] if mention_j.amtmp is not None else None
                 mention_j_amloc = mention_j.amloc[0] if mention_j.amloc is not None else None
                 mention_j_str = mention_j.mention_str
+                mention_j_full_str = ' '.join([mention_j_arg1, mention_j_str, mention_j_arg2])
                 mention_j_str_emb = sent_2_emb(mention_j_str.lower().split(), word2vec)
+                mention_j_full_str_emb = sent_2_emb(mention_j_full_str.lower().split(), word2vec)
+
                 # print('mention_i_str: ', mention_i_str, ' mention_j_str:', mention_j_str)
                 if mention_i.mention_head_lemma == mention_j.mention_head_lemma:
                     # if ((mention_i_arg1 is not None and mention_j_arg1 is not None) and (mention_i_arg1 != mention_j_arg1) or
@@ -146,8 +152,10 @@ def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
                     '''cosine'''
                     # if vec_i is not None and vec_j is not None:
                     #     cos = 1.0-cosine(vec_i, vec_j)
-                    if mention_i_str_emb is not None and mention_j_str_emb is not None:
-                        cos = 1.0-cosine(mention_i_str_emb, mention_j_str_emb)
+                    # if mention_i_str_emb is not None and mention_j_str_emb is not None:
+                    #     cos = 1.0-cosine(mention_i_str_emb, mention_j_str_emb)
+                    if mention_i_full_str_emb is not None and mention_j_full_str_emb is not None:
+                        cos = 1.0-cosine(mention_i_full_str_emb, mention_j_full_str_emb)
                     else:
                         cos = 0.0
                     if cos > 0.5:
