@@ -118,8 +118,8 @@ def run_conll_scorer(config_dict):
         if status is not None:
             processes.pop(0)
 
-    print ('Running scorers has been done.')
-    print ('Save results...')
+    print ('Calculating scores.....')
+    # print ('Save results...')
 
     # scores_file = open(out_dir+'conll_f1_scores.txt', 'w')
 
