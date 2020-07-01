@@ -189,7 +189,7 @@ def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
             cluster.mentions[mention.mention_id] = mention
         clusters.append(cluster)
 
-    return clusters
+    return clusters, same_lemma_error-same_lemma_error_after, diff_lemma_error-diff_lemma_error_after
 
 def merge_all_topics(test_set):
     '''
@@ -223,14 +223,19 @@ def run_same_lemmma_baseline(test_set):
         topics = test_set.topics
     topics_keys = topics.keys()
 
+    decrease_same_lemma=0
+    decrease_diff_lemma=0
     for topic_id in topics_keys:
         topic = topics[topic_id]
         topics_counter += 1
 
         event_mentions, entity_mentions = topic_to_mention_list(topic, is_gold=config_dict["test_use_gold_mentions"])
 
-        event_clusters = get_clusters_by_head_lemma_wenpeng(event_mentions, word2vec,  is_event=True)
+        event_clusters, decrease_same_lemma_i,  decrease_diff_lemma_i= get_clusters_by_head_lemma_wenpeng(event_mentions, word2vec,  is_event=True)
         entity_clusters = get_clusters_by_head_lemma(entity_mentions,  is_event=False)
+
+        decrease_same_lemma+=decrease_same_lemma_i
+        decrease_diff_lemma+=decrease_diff_lemma_i
 
         if config_dict["eval_mode"] == 1:
             event_clusters = separate_clusters_to_sub_topics(event_clusters, is_event=True)
@@ -255,7 +260,7 @@ def run_same_lemmma_baseline(test_set):
                                     is_gold=config_dict["test_use_gold_mentions"],intersect_with_gold=True)
     write_event_coref_results(test_set, args.out_dir, config_dict)
     write_entity_coref_results(test_set, args.out_dir, config_dict)
-
+    print('decrease_same_lemma:', decrease_same_lemma, 'decrease_diff_lemma:', decrease_diff_lemma)
     run_conll_scorer(config_dict)
 
 def main():
