@@ -159,6 +159,7 @@ def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
                     insert=True
                     break
                 else:
+                    comprehend_cos = max(lemma_cos, full_mention_cos)
                     '''add extra beyong lemma matching'''
                     if mention_i.gold_tag == mention_j.gold_tag:
                         diff_lemma_error+=1
@@ -167,7 +168,9 @@ def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
                         print('mention j:', mention_j, mention_j.mention_head_lemma)
                         print('lemma_cos:', lemma_cos)
 
-                    if lemma_cos > 0.6:
+
+                    # if lemma_cos > 0.6:
+                    if comprehend_cos > 0.6
                         if mention_i.gold_tag == mention_j.gold_tag:
                             diff_lemma_error_after-=1
                         list_of_list_mention[list_id].append(mention_i)
