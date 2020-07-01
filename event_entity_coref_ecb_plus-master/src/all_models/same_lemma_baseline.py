@@ -91,10 +91,12 @@ def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
     clusters = []
 
     for mention in mentions:
-        # print('mention:', mention, mention.mention_head_lemma)
+        print('mention:', mention, mention.mention_head_lemma)
         if mention.mention_head_lemma not in mentions_by_head_lemma:
             mentions_by_head_lemma[mention.mention_head_lemma] = []
         mentions_by_head_lemma[mention.mention_head_lemma].append(mention)
+
+    exit(0)
     '''all mentioned has been grouped by same lemma; now we combine groups if their lemmas have high embedding similarity'''
     lemmas_be_taken_in=set()
     all_lemma_list = list(mentions_by_head_lemma.keys())
