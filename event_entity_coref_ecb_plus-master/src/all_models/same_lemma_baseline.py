@@ -113,7 +113,7 @@ def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
                     cos = 1.0-cosine(vec_i, vec_j)
                 else:
                     cos = 0.0
-                if cos > 0.7:
+                if cos > 0.8:
                     '''combine two lists of mentions'''
                     new_mention_list = mentions_by_head_lemma.get(lemma_i)+mentions_by_head_lemma.get(lemma_j)
                     mentions_by_head_lemma[lemma_i] = new_mention_list
@@ -222,4 +222,6 @@ if __name__ == '__main__':
 
 '''
 python same_lemma_baseline.py --config_path ../../lemma_baseline_config.json --out_dir wenpeng/
+
+0.7: 77.07
 '''
