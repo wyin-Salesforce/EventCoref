@@ -159,7 +159,7 @@ def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
                     insert=True
                     break
                 else:
-                    comprehend_cos = max(lemma_cos, full_mention_cos)
+                    comprehend_cos = mean(lemma_cos, full_mention_cos)
                     '''add extra beyong lemma matching'''
                     if mention_i.gold_tag == mention_j.gold_tag:
                         diff_lemma_error+=1
