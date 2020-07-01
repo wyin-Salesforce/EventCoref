@@ -127,6 +127,7 @@ def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
             if max_list_index > -1:
                 list_of_list_lemmas[max_list_index].append(lemma_i)
     '''now combine the lemma list of clustered lemmas'''
+    print('list_of_list_lemmas:', len(list_of_list_lemmas), list_of_list_lemmas)
     new_mentions_by_head_lemma = {}
     for lemma_list in list_of_list_lemmas:
         combine_lemma_list = []
