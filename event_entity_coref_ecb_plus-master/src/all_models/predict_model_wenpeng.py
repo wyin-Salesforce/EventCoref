@@ -110,8 +110,8 @@ def run_conll_scorer(config_dict):
     print('Run scorer command for cross-document event coreference')
     processes.append(subprocess.Popen(event_scorer_command, shell=True))
 
-    print('Run scorer command for cross-document entity coreference')
-    processes.append(subprocess.Popen(entity_scorer_command, shell=True))
+    # print('Run scorer command for cross-document entity coreference')
+    # processes.append(subprocess.Popen(entity_scorer_command, shell=True))
 
     while processes:
         status = processes[0].poll()
@@ -124,8 +124,8 @@ def run_conll_scorer(config_dict):
     scores_file = open(out_dir+'conll_f1_scores.txt', 'w')
 
     event_f1 = read_conll_f1(event_conll_file)
-    entity_f1 = read_conll_f1(entity_conll_file)
+    # entity_f1 = read_conll_f1(entity_conll_file)
     scores_file.write('Event CoNLL F1: {}\n'.format(event_f1))
-    scores_file.write('Entity CoNLL F1: {}\n'.format(entity_f1))
+    # scores_file.write('Entity CoNLL F1: {}\n'.format(entity_f1))
 
     scores_file.close()
