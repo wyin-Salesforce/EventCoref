@@ -90,61 +90,28 @@ def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
     mentions_by_head_lemma = {}
     clusters = []
 
-    for mention in mentions:
-        print('mention:', mention, mention.mention_head_lemma, mention.arg0)
-        if mention.mention_head_lemma not in mentions_by_head_lemma:
-            mentions_by_head_lemma[mention.mention_head_lemma] = []
-        mentions_by_head_lemma[mention.mention_head_lemma].append(mention)
 
-    exit(0)
-    '''all mentioned has been grouped by same lemma; now we combine groups if their lemmas have high embedding similarity'''
-    lemmas_be_taken_in=set()
-    all_lemma_list = list(mentions_by_head_lemma.keys())
+    list_of_list_mention=[]
+    list_of_list_mention.append([mentions[0]])
+    for mention_i in mentions[1:]:
+        insert=False
+        for list_id, mention_list in enumerate(list_of_list_mention):
+            for mention_j in mention_list:
+                if mention_i.mention_head_lemma == mention_j.mention_head_lemma:
+                    '''put in this list'''
+                    list_of_list_mention[list_id].append(mention_i)
+                    insert=True
+                    break
+            if insert:
+                break
+        if not insert:
+            list_of_list_mention.append([mention_i])
 
-    list_of_list_lemmas=[]
-    list_of_list_lemmas.append([all_lemma_list[0]])
-    for lemma_i in all_lemma_list[1:]:
-        vec_i = word2vec.get(lemma_i)
-        max_list_index = -1
-        max_similarity = -10.0
-        for list_index, existing_lemma_list in enumerate(list_of_list_lemmas):
-            max_similarity_from_list = 0.0
-            for lemma_j in existing_lemma_list:
-                vec_j = word2vec.get(lemma_j)
-                if vec_i is not None and vec_j is not None:
-                    cos = 1.0-cosine(vec_i, vec_j)
-                else:
-                    cos = 0.0
-                if cos > max_similarity_from_list:
-                    max_similarity_from_list = cos
-            if max_similarity_from_list > max_similarity:
-                max_similarity = max_similarity_from_list
-                max_list_index = list_index
-
-        '''lemma_i start a new list'''
-        if max_similarity < 0.6:
-            list_of_list_lemmas.append([lemma_i])
-        else:
-            '''if means lemma_i should be put in max_list_index'''
-            if max_list_index > -1:
-                list_of_list_lemmas[max_list_index].append(lemma_i)
-    '''now combine the lemma list of clustered lemmas'''
-    print('original size mentions_by_head_lemma:', len(mentions_by_head_lemma.keys()))
-    print('list_of_list_lemmas:', len(list_of_list_lemmas), list_of_list_lemmas)
-    new_mentions_by_head_lemma = {}
-    for lemma_list in list_of_list_lemmas:
-        combine_mention_list = []
-        for lemma_i in lemma_list:
-            combine_mention_list+=mentions_by_head_lemma.get(lemma_i)
-        new_mentions_by_head_lemma[lemma_list[0]] = combine_mention_list
-
-    print('mentions_by_head_lemma:', mentions_by_head_lemma.keys())
-    print('new_mentions_by_head_lemma:', new_mentions_by_head_lemma.keys())
-    # exit(0)
 
 
     # for head_lemma, mentions in mentions_by_head_lemma.items():
-    for head_lemma, mentions in new_mentions_by_head_lemma.items():
+    # for head_lemma, mentions in new_mentions_by_head_lemma.items():
+    for mentions in list_of_list_mention:
         cluster = Cluster(is_event=is_event)
         for mention in mentions:
             cluster.mentions[mention.mention_id] = mention
