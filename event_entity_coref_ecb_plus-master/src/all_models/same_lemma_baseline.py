@@ -13,7 +13,7 @@ import logging
 import argparse
 from classes import *
 from model_utils import *
-from predict_model import run_conll_scorer
+from predict_model_wenpeng import run_conll_scorer
 
 parser = argparse.ArgumentParser(description='Run same lemma baseline')
 
