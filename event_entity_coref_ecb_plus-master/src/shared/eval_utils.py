@@ -4,10 +4,12 @@ import logging
 import operator
 import collections
 
-for pack in os.listdir("src"):
-    sys.path.append(os.path.join("src", pack))
+# for pack in os.listdir("src"):
+#     sys.path.append(os.path.join("src", pack))
 
-sys.path.append("/src/shared/")
+# sys.path.append("/src/shared/")
+sys.path.append("/export/home/workspace/EventCoref/event_entity_coref_ecb_plus-master/src/shared/")
+
 
 written_mentions = 0
 cd_clusters_count = 10000
