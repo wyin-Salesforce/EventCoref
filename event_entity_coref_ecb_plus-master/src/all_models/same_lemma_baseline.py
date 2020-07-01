@@ -143,7 +143,7 @@ def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
                 else:
                     full_mention_cos = 0.0
                 if mention_i.mention_head_lemma == mention_j.mention_head_lemma:
-                    if full_mention_cos < 0.18:
+                    if full_mention_cos < 0.22:
                         continue
                     '''put in this list'''
                     list_of_list_mention[list_id].append(mention_i)
