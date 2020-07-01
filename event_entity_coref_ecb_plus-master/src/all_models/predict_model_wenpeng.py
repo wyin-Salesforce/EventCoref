@@ -88,7 +88,7 @@ def read_conll_f1(filename):
     return (muc_f1 + bcued_f1 + ceafe_f1)/float(3)
 
 
-def run_conll_scorer():
+def run_conll_scorer(config_dict):
     if config_dict["test_use_gold_mentions"]:
         event_response_filename = os.path.join(args.out_dir, 'CD_test_event_mention_based.response_conll')
         entity_response_filename = os.path.join(args.out_dir, 'CD_test_entity_mention_based.response_conll')

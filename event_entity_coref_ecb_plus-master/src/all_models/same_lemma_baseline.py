@@ -124,7 +124,7 @@ def run_same_lemmma_baseline(test_set):
     write_event_coref_results(test_set, args.out_dir, config_dict)
     write_entity_coref_results(test_set, args.out_dir, config_dict)
 
-    run_conll_scorer()
+    run_conll_scorer(config_dict)
 
 def main():
     '''
