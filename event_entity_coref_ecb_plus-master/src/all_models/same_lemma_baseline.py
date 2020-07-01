@@ -118,6 +118,7 @@ def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
 
         for list_id, mention_list in enumerate(list_of_list_mention):
             for mention_j in mention_list:
+                vec_j = word2vec.get(mention_j.mention_head_lemma)
                 mention_j_arg1 = mention_j.arg0[0] if mention_j.arg0 is not None else None
                 mention_j_arg2 = mention_j.arg1[0] if mention_j.arg1 is not None else None
                 mention_j_amtmp = mention_j.amtmp[0] if mention_j.amtmp is not None else None
@@ -143,12 +144,13 @@ def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
                     #     insert=True
                     #     break
                     '''cosine'''
-                    # vec_j = word2vec.get(mention_j.mention_head_lemma)
+                    # if vec_i is not None and vec_j is not None:
+                    #     cos = 1.0-cosine(vec_i, vec_j)
                     if mention_i_str_emb is not None and mention_j_str_emb is not None:
                         cos = 1.0-cosine(mention_i_str_emb, mention_j_str_emb)
                     else:
                         cos = 0.0
-                    if cos > 0.6:
+                    if cos > 0.5:
                         list_of_list_mention[list_id].append(mention_i)
                         insert=True
                         break
