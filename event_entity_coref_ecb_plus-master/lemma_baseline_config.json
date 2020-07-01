@@ -8,7 +8,5 @@
   "run_on_all_topics": false,
 
   "load_predicted_topics": true,
-  "predicted_topics_path": "/export/home/workspace/EventCoref/event_entity_coref_ecb_plus-master/data/external/document_clustering/predicted_topics",
-
-  "random_seed": 2048,
+  "predicted_topics_path": "/export/home/workspace/EventCoref/event_entity_coref_ecb_plus-master/data/external/document_clustering/predicted_topics"
 }
