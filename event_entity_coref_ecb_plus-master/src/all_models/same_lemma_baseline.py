@@ -116,7 +116,7 @@ def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
         mention_i_full_str = ' '.join([mention_i_arg1, mention_i_str, mention_i_arg2])#, mention_i_amtmp, mention_i_amloc])
         mention_i_str_emb = sent_2_emb(mention_i_str.lower().split(), word2vec)
         mention_i_full_str_emb = sent_2_emb(mention_i_full_str.lower().split(), word2vec)
-        print('mention_i gold_tag:', mention_i.gold_tag)
+        # print('mention_i gold_tag:', mention_i.gold_tag)
 
 
         for list_id, mention_list in enumerate(list_of_list_mention):
@@ -130,7 +130,7 @@ def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
                 mention_j_full_str = ' '.join([mention_j_arg1, mention_j_str, mention_j_arg2])#, mention_j_amtmp, mention_j_amloc])
                 mention_j_str_emb = sent_2_emb(mention_j_str.lower().split(), word2vec)
                 mention_j_full_str_emb = sent_2_emb(mention_j_full_str.lower().split(), word2vec)
-                print('mention_j gold_tag:', mention_j.gold_tag)
+                # print('mention_j gold_tag:', mention_j.gold_tag)
                 '''cosine'''
                 if vec_i is not None and vec_j is not None:
                     lemma_cos = 1.0-cosine(vec_i, vec_j)
@@ -143,6 +143,9 @@ def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
                 else:
                     full_mention_cos = 0.0
                 if mention_i.mention_head_lemma == mention_j.mention_head_lemma:
+                    if mention_i.gold_tag != mention_j.gold_tag:
+                        print('mention i:', mention_i)
+                        print('mention j:', mention_i)
                     if full_mention_cos < 0.22:
                         continue
                     '''put in this list'''
