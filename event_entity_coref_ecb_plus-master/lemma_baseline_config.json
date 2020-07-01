@@ -1,5 +1,5 @@
 {
-  "test_path":"data/processed/kian_split/full/test_data",
+  "test_path":"/export/home/Dataset/EventCoref/processed/full_swirl_ecb/test_data",
 
   "test_use_gold_mentions": true,
   "remove_singletons": false,
@@ -8,5 +8,5 @@
   "run_on_all_topics": false,
 
   "load_predicted_topics": true,
-  "predicted_topics_path": "data/external/document_clustering/predicted_topics"
+  "predicted_topics_path": "/export/home/workspace/EventCoref/event_entity_coref_ecb_plus-master/data/external/document_clustering/predicted_topics"
 }
