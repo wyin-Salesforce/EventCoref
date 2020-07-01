@@ -108,10 +108,10 @@ def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
     for mention_i in mentions[1:]:
         insert=False
         vec_i = word2vec.get(mention_i.mention_head_lemma)
-        mention_i_arg1 = mention_i.arg0[0] if mention_i.arg0 is not None else None
-        mention_i_arg2 = mention_i.arg1[0] if mention_i.arg1 is not None else None
-        mention_i_amtmp = mention_i.amtmp[0] if mention_i.amtmp is not None else None
-        mention_i_amloc = mention_i.amloc[0] if mention_i.amloc is not None else None
+        mention_i_arg1 = mention_i.arg0[0] if mention_i.arg0 is not None else ''
+        mention_i_arg2 = mention_i.arg1[0] if mention_i.arg1 is not None else ''
+        mention_i_amtmp = mention_i.amtmp[0] if mention_i.amtmp is not None else ''
+        mention_i_amloc = mention_i.amloc[0] if mention_i.amloc is not None else ''
         mention_i_str = mention_i.mention_str
         mention_i_full_str = ' '.join([mention_i_arg1, mention_i_str, mention_i_arg2])
         mention_i_str_emb = sent_2_emb(mention_i_str.lower().split(), word2vec)
@@ -122,10 +122,10 @@ def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
         for list_id, mention_list in enumerate(list_of_list_mention):
             for mention_j in mention_list:
                 vec_j = word2vec.get(mention_j.mention_head_lemma)
-                mention_j_arg1 = mention_j.arg0[0] if mention_j.arg0 is not None else None
-                mention_j_arg2 = mention_j.arg1[0] if mention_j.arg1 is not None else None
-                mention_j_amtmp = mention_j.amtmp[0] if mention_j.amtmp is not None else None
-                mention_j_amloc = mention_j.amloc[0] if mention_j.amloc is not None else None
+                mention_j_arg1 = mention_j.arg0[0] if mention_j.arg0 is not None else ''
+                mention_j_arg2 = mention_j.arg1[0] if mention_j.arg1 is not None else ''
+                mention_j_amtmp = mention_j.amtmp[0] if mention_j.amtmp is not None else ''
+                mention_j_amloc = mention_j.amloc[0] if mention_j.amloc is not None else ''
                 mention_j_str = mention_j.mention_str
                 mention_j_full_str = ' '.join([mention_j_arg1, mention_j_str, mention_j_arg2])
                 mention_j_str_emb = sent_2_emb(mention_j_str.lower().split(), word2vec)
