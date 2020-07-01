@@ -80,6 +80,18 @@ def get_clusters_by_head_lemma(mentions, is_event):
 
     return clusters
 
+def sent_2_emb(wordlist, word2vec):
+    emb_list = []
+    for word in wordlist:
+        emb = word2vec.get(word, None)
+        if emb is not None:
+            emb_list.append(emb)
+    if len(emb_list) > 0:
+        arr = np.array(emb_list)
+        return np.sum(arr, axis=0)
+    else:
+        return np.array([0.0]*300)
+
 def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
     '''
     Given a list of mentions, this function clusters mentions that share the same head lemma.
@@ -101,6 +113,8 @@ def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
         mention_i_amtmp = mention_i.amtmp[0] if mention_i.amtmp is not None else None
         mention_i_amloc = mention_i.amloc[0] if mention_i.amloc is not None else None
         mention_i_str = mention_i.mention_str
+        mention_i_str_emb = sent_2_emb(mention_i_str.lower().split(), word2vec)
+
 
         for list_id, mention_list in enumerate(list_of_list_mention):
             for mention_j in mention_list:
@@ -109,7 +123,8 @@ def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
                 mention_j_amtmp = mention_j.amtmp[0] if mention_j.amtmp is not None else None
                 mention_j_amloc = mention_j.amloc[0] if mention_j.amloc is not None else None
                 mention_j_str = mention_j.mention_str
-                print('mention_i_str: ', mention_i_str, ' mention_j_str:', mention_j_str)
+                mention_j_str_emb = sent_2_emb(mention_j_str.lower().split(), word2vec)
+                # print('mention_i_str: ', mention_i_str, ' mention_j_str:', mention_j_str)
                 if mention_i.mention_head_lemma == mention_j.mention_head_lemma:
                     # if ((mention_i_arg1 is not None and mention_j_arg1 is not None) and (mention_i_arg1 != mention_j_arg1) or
                     #     (mention_i_arg2 is not None and mention_j_arg2 is not None) and (mention_i_arg2 != mention_j_arg2)):
@@ -122,15 +137,15 @@ def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
                 else:
                     '''add extra beyong lemma matching'''
                     '''even lemma not the same, if arg1 or arg2 is the same, ok'''
-                    if ((mention_i_arg1 is not None and mention_j_arg1 is not None) and (mention_i_arg1 == mention_j_arg1) or
-                        (mention_i_arg2 is not None and mention_j_arg2 is not None) and (mention_i_arg2 == mention_j_arg2)):
-                        list_of_list_mention[list_id].append(mention_i)
-                        insert=True
-                        break
+                    # if ((mention_i_arg1 is not None and mention_j_arg1 is not None) and (mention_i_arg1 == mention_j_arg1) or
+                    #     (mention_i_arg2 is not None and mention_j_arg2 is not None) and (mention_i_arg2 == mention_j_arg2)):
+                    #     list_of_list_mention[list_id].append(mention_i)
+                    #     insert=True
+                    #     break
                     '''cosine'''
-                    vec_j = word2vec.get(mention_j.mention_head_lemma)
-                    if vec_i is not None and vec_j is not None:
-                        cos = 1.0-cosine(vec_i, vec_j)
+                    # vec_j = word2vec.get(mention_j.mention_head_lemma)
+                    if mention_i_str_emb is not None and mention_j_str_emb is not None:
+                        cos = 1.0-cosine(mention_i_str_emb, mention_j_str_emb)
                     else:
                         cos = 0.0
                     if cos > 0.6:
