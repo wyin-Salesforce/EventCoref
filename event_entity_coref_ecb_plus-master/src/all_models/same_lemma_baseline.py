@@ -134,8 +134,8 @@ def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
             combine_lemma_list+=mentions_by_head_lemma.get(lemma_i)
         new_mentions_by_head_lemma[lemma_list[0]] = combine_lemma_list
 
-    print('mentions_by_head_lemma:', mentions_by_head_lemma)
-    print('new_mentions_by_head_lemma:', new_mentions_by_head_lemma)
+    print('mentions_by_head_lemma:', mentions_by_head_lemma.keys())
+    print('new_mentions_by_head_lemma:', new_mentions_by_head_lemma.keys())
     exit(0)
 
 
