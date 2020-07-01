@@ -143,10 +143,10 @@ def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
                 else:
                     full_mention_cos = 0.0
                 if mention_i.mention_head_lemma == mention_j.mention_head_lemma:
-                    if mention_i.gold_tag != mention_j.gold_tag:
-                        print('mention i:', mention_i)
-                        print('mention j:', mention_j)
-                    if full_mention_cos < 0.26:
+                    # if mention_i.gold_tag != mention_j.gold_tag:
+                    #     print('mention i:', mention_i)
+                    #     print('mention j:', mention_j)
+                    if full_mention_cos < 0.22:
                         continue
                     '''put in this list'''
                     list_of_list_mention[list_id].append(mention_i)
@@ -271,4 +271,5 @@ if __name__ == '__main__':
 python same_lemma_baseline.py --config_path ../../lemma_baseline_config.json --out_dir wenpeng/
 
 0.6: 77.26
+0.6, 0.22: 77.51%
 '''
