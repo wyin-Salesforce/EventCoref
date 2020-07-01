@@ -18,8 +18,9 @@ from spacy.lang.en import English
 # for pack in os.listdir("src"):
 #     sys.path.append(os.path.join("src", pack))
 # sys.path.append("/src/shared/")
+sys.path.append("/export/home/workspace/EventCoref/event_entity_coref_ecb_plus-master/src/shared/")
 
-from ../shared/classes import *
+from classes import *
 
 clusters_count = 1
 
