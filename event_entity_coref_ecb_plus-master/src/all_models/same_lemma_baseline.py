@@ -91,7 +91,7 @@ def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
     clusters = []
 
     for mention in mentions:
-        print('mention:', mention, mention.mention_head_lemma, mention.arg0_vec)
+        print('mention:', mention, mention.mention_head_lemma, mention.arg0)
         if mention.mention_head_lemma not in mentions_by_head_lemma:
             mentions_by_head_lemma[mention.mention_head_lemma] = []
         mentions_by_head_lemma[mention.mention_head_lemma].append(mention)
