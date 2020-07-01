@@ -97,7 +97,7 @@ def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
         mentions_by_head_lemma[mention.mention_head_lemma].append(mention)
     '''all mentioned has been grouped by same lemma; now we combine groups if their lemmas have high embedding similarity'''
     lemmas_be_taken_in=set()
-    all_lemma_list = mentions_by_head_lemma.keys()
+    all_lemma_list = list(mentions_by_head_lemma.keys())
     for i in range(len(all_lemma_list)):
         lemma_i = all_lemma_list[i]
         if lemma_i in lemmas_be_taken_in:
