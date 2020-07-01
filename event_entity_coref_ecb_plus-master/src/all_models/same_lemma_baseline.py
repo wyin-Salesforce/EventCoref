@@ -13,6 +13,7 @@ import logging
 import argparse
 from classes import *
 from model_utils import *
+from predict_model import run_conll_scorer
 
 parser = argparse.ArgumentParser(description='Run same lemma baseline')
 
@@ -123,6 +124,7 @@ def run_same_lemmma_baseline(test_set):
     write_event_coref_results(test_set, args.out_dir, config_dict)
     write_entity_coref_results(test_set, args.out_dir, config_dict)
 
+    run_conll_scorer()
 
 def main():
     '''
