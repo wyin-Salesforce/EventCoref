@@ -121,11 +121,12 @@ def run_conll_scorer(config_dict):
     print ('Running scorers has been done.')
     print ('Save results...')
 
-    scores_file = open(out_dir+'conll_f1_scores.txt', 'w')
+    # scores_file = open(out_dir+'conll_f1_scores.txt', 'w')
 
     event_f1 = read_conll_f1(event_conll_file)
     entity_f1 = read_conll_f1(entity_conll_file)
-    scores_file.write('Event CoNLL F1: {}\n'.format(event_f1))
-    scores_file.write('Entity CoNLL F1: {}\n'.format(entity_f1))
+    print('event_f1: ', event_f1, ' entity_f1:', entity_f1)
+    # scores_file.write('Event CoNLL F1: {}\n'.format(event_f1))
+    # scores_file.write('Entity CoNLL F1: {}\n'.format(entity_f1))
 
-    scores_file.close()
+    # scores_file.close()
