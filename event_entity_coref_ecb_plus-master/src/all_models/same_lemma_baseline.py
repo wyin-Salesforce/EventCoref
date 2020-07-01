@@ -109,13 +109,17 @@ def run_same_lemmma_baseline(test_set):
         with open(os.path.join(args.out_dir, 'event_clusters.txt'), 'a') as event_file_obj:
             write_clusters_to_file(event_clusters, event_file_obj, topic_id)
 
+        # set_coref_chain_to_mentions(event_clusters, is_event=True,
+        #                             is_gold=config_dict["test_use_gold_mentions"],intersect_with_gold=True
+        #                             ,remove_singletons=config_dict["remove_singletons"])
+        # set_coref_chain_to_mentions(entity_clusters, is_event=False,
+        #                             is_gold=config_dict["test_use_gold_mentions"],intersect_with_gold=True
+        #                             ,remove_singletons=config_dict["remove_singletons"])
+        '''remove parameter remove_singletons'''
         set_coref_chain_to_mentions(event_clusters, is_event=True,
-                                    is_gold=config_dict["test_use_gold_mentions"],intersect_with_gold=True
-                                    ,remove_singletons=config_dict["remove_singletons"])
+                                    is_gold=config_dict["test_use_gold_mentions"],intersect_with_gold=True)
         set_coref_chain_to_mentions(entity_clusters, is_event=False,
-                                    is_gold=config_dict["test_use_gold_mentions"],intersect_with_gold=True
-                                    ,remove_singletons=config_dict["remove_singletons"])
-
+                                    is_gold=config_dict["test_use_gold_mentions"],intersect_with_gold=True)
     write_event_coref_results(test_set, args.out_dir, config_dict)
     write_entity_coref_results(test_set, args.out_dir, config_dict)
 
