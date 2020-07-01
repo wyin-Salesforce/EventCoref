@@ -8,5 +8,8 @@
   "run_on_all_topics": false,
 
   "load_predicted_topics": true,
-  "predicted_topics_path": "/export/home/workspace/EventCoref/event_entity_coref_ecb_plus-master/data/external/document_clustering/predicted_topics"
+  "predicted_topics_path": "/export/home/workspace/EventCoref/event_entity_coref_ecb_plus-master/data/external/document_clustering/predicted_topics",
+
+  "event_gold_file_path": "data/gold/cybulska_gold/CD_test_event_mention_based.key_conll",
+  "entity_gold_file_path": "data/gold/cybulska_gold/CD_test_entity_mention_based.key_conll"
 }
