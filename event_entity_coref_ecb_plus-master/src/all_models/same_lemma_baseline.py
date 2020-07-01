@@ -33,7 +33,7 @@ with open(os.path.join(args.out_dir,'lemma_baseline_config.json'), "w") as js_fi
 
 # from classes import *
 from model_utils import *
-# from eval_utils import *
+from eval_utils import *
 
 def get_clusters_by_head_lemma(mentions, is_event):
     '''
