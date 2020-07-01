@@ -95,6 +95,7 @@ def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
     list_of_list_mention.append([mentions[0]])
     for mention_i in mentions[1:]:
         insert=False
+        vec_i = word2vec.get(mention_i.mention_head_lemma)
         for list_id, mention_list in enumerate(list_of_list_mention):
             for mention_j in mention_list:
                 if mention_i.mention_head_lemma == mention_j.mention_head_lemma:
@@ -102,6 +103,19 @@ def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
                     list_of_list_mention[list_id].append(mention_i)
                     insert=True
                     break
+                else:
+                    '''add extra beyong lemma matching'''
+                    vec_j = word2vec.get(mention_j.mention_head_lemma)
+                    if vec_i is not None and vec_j is not None:
+                        cos = 1.0-cosine(vec_i, vec_j)
+                    else:
+                        cos = 0.0
+                    if cos > 0.5:
+                        list_of_list_mention[list_id].append(mention_i)
+                        insert=True
+                        break
+
+
             if insert:
                 break
         if not insert:
