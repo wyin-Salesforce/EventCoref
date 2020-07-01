@@ -2,7 +2,7 @@ import os
 import gc
 import sys
 import json
-
+from scipy.spatial.distance import cosine
 # for pack in os.listdir("src"):
 #     sys.path.append(os.path.join("src", pack))
 
@@ -36,6 +36,26 @@ with open(os.path.join(args.out_dir,'lemma_baseline_config.json'), "w") as js_fi
 from model_utils import *
 from eval_utils import *
 
+
+def load_word2vec():
+    word2vec = {}
+
+    print("==> loading 300d word2vec")
+
+    f=open('/export/home/Dataset/word2vec_words_300d.txt', 'r')#glove.6B.300d.txt, word2vec_words_300d.txt, glove.840B.300d.txt
+    co = 0
+    for line in f:
+        l = line.split()
+        word2vec[l[0]] = list(map(float, l[1:]))
+        co+=1
+        if co % 50000 == 0:
+            print('loading w2v size:', co)
+        # if co % 10000 == 0:
+        #     break
+    print("==> word2vec is loaded")
+    return word2vec
+
+
 def get_clusters_by_head_lemma(mentions, is_event):
     '''
     Given a list of mentions, this function clusters mentions that share the same head lemma.
@@ -47,11 +67,11 @@ def get_clusters_by_head_lemma(mentions, is_event):
     clusters = []
 
     for mention in mentions:
-        print('mention:', mention, mention.mention_head_lemma)
+        # print('mention:', mention, mention.mention_head_lemma)
         if mention.mention_head_lemma not in mentions_by_head_lemma:
             mentions_by_head_lemma[mention.mention_head_lemma] = []
         mentions_by_head_lemma[mention.mention_head_lemma].append(mention)
-    exit(0)
+    # exit(0)
     for head_lemma, mentions in mentions_by_head_lemma.items():
         cluster = Cluster(is_event=is_event)
         for mention in mentions:
@@ -60,6 +80,56 @@ def get_clusters_by_head_lemma(mentions, is_event):
 
     return clusters
 
+def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
+    '''
+    Given a list of mentions, this function clusters mentions that share the same head lemma.
+    :param mentions: list of Mention objects (can be event or entity mentions)
+    :param is_event: whether the function clusters event or entity mentions.
+    :return: list of Cluster objects
+    '''
+    mentions_by_head_lemma = {}
+    clusters = []
+
+    for mention in mentions:
+        # print('mention:', mention, mention.mention_head_lemma)
+        if mention.mention_head_lemma not in mentions_by_head_lemma:
+            mentions_by_head_lemma[mention.mention_head_lemma] = []
+        mentions_by_head_lemma[mention.mention_head_lemma].append(mention)
+    '''all mentioned has been grouped by same lemma; now we combine groups if their lemmas have high embedding similarity'''
+    lemmas_be_taken_in=set()
+    all_lemma_list = mentions_by_head_lemma.keys()
+    for i in range(len(all_lemma_list)):
+        lemma_i = all_lemma_list[i]
+        if lemma_i in lemmas_be_taken_in:
+            continue
+        for j in range(i+1, len(all_lemma_list)):
+            lemma_j = all_lemma_list[j]
+            if lemma_j in lemmas_be_taken_in:
+                continue
+            if lemma_i != lemma_j:
+                vec_i = word2vec.get(lemma_i)
+                vec_j = word2vec.get(lemma_j)
+                if vec_i is not None and vec_j is not None:
+                    cos = 1.0-cosine(vec_i, vec_j)
+                else:
+                    cos = 0.0
+                if cos > 0.5:
+                    '''combine two lists of mentions'''
+                    new_mention_list = mentions_by_head_lemma.get(lemma_i)+mentions_by_head_lemma.get(lemma_j)
+                    mentions_by_head_lemma[lemma_i] = new_mention_list
+                    lemmas_be_taken_in.add(lemma_j)
+
+
+    for key in lemmas_be_taken_in:
+        del mentions_by_head_lemma[key]
+
+    for head_lemma, mentions in mentions_by_head_lemma.items():
+        cluster = Cluster(is_event=is_event)
+        for mention in mentions:
+            cluster.mentions[mention.mention_id] = mention
+        clusters.append(cluster)
+
+    return clusters
 
 def merge_all_topics(test_set):
     '''
@@ -81,6 +151,7 @@ def run_same_lemmma_baseline(test_set):
     Runs the head lemma baseline and writes its predicted clusters.
     :param test_set: A Corpus object representing the test set.
     '''
+    word2vec = load_word2vec()
     topics_counter = 0
     if config_dict["merge_sub_topics_to_topics"]:
         topics = merge_sub_topics_to_topics(test_set)
@@ -98,8 +169,8 @@ def run_same_lemmma_baseline(test_set):
 
         event_mentions, entity_mentions = topic_to_mention_list(topic, is_gold=config_dict["test_use_gold_mentions"])
 
-        event_clusters = get_clusters_by_head_lemma(event_mentions, is_event=True)
-        entity_clusters = get_clusters_by_head_lemma(entity_mentions, is_event=False)
+        event_clusters = get_clusters_by_head_lemma_wenpeng(event_mentions, word2vec,  is_event=True)
+        entity_clusters = get_clusters_by_head_lemma(entity_mentions,  is_event=False)
 
         if config_dict["eval_mode"] == 1:
             event_clusters = separate_clusters_to_sub_topics(event_clusters, is_event=True)
