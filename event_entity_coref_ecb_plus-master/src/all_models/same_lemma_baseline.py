@@ -120,7 +120,7 @@ def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
                 max_list_index = list_index
 
         '''lemma_i start a new list'''
-        if max_similarity < 0.7:
+        if max_similarity < 0.3:
             list_of_list_lemmas.append([lemma_i])
         else:
             '''if means lemma_i should be put in max_list_index'''
@@ -138,7 +138,7 @@ def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
 
     print('mentions_by_head_lemma:', mentions_by_head_lemma.keys())
     print('new_mentions_by_head_lemma:', new_mentions_by_head_lemma.keys())
-    exit(0)
+    # exit(0)
 
 
     # for head_lemma, mentions in mentions_by_head_lemma.items():
