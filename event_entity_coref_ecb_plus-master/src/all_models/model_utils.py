@@ -9,7 +9,7 @@ import itertools
 import collections
 import numpy as np
 from scorer import *
-# from eval_utils import *
+from eval_utils import *
 import _pickle as cPickle
 from bcubed_scorer import *
 # import matplotlib.pyplot as plt
