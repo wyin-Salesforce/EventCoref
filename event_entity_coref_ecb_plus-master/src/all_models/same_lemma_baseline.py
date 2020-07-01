@@ -110,7 +110,7 @@ def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
                         cos = 1.0-cosine(vec_i, vec_j)
                     else:
                         cos = 0.0
-                    if cos > 0.5:
+                    if cos > 0.7:
                         list_of_list_mention[list_id].append(mention_i)
                         insert=True
                         break
