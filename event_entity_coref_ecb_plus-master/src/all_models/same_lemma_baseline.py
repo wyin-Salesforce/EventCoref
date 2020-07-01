@@ -149,5 +149,5 @@ if __name__ == '__main__':
 
 
 '''
-python same_lemma_baseline.py --config_path ../../test_config.json --out_dir wenpeng/
+python same_lemma_baseline.py --config_path ../../lemma_baseline_config.json --out_dir wenpeng/
 '''
