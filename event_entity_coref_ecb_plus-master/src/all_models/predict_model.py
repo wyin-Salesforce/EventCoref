@@ -6,10 +6,12 @@ import random
 import subprocess
 import numpy as np
 
-for pack in os.listdir("src"):
-    sys.path.append(os.path.join("src", pack))
+# for pack in os.listdir("src"):
+#     sys.path.append(os.path.join("src", pack))
 
-sys.path.append("/src/shared/")
+# sys.path.append("/src/shared/")
+sys.path.append("/export/home/workspace/EventCoref/event_entity_coref_ecb_plus-master/src/shared/")
+
 
 import _pickle as cPickle
 import logging
