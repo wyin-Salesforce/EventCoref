@@ -89,15 +89,16 @@ def read_conll_f1(filename):
 
 
 def run_conll_scorer(config_dict):
+    out_dir = '/export/home/workspace/EventCoref/event_entity_coref_ecb_plus-master/src/all_models/wenpeng/'
     if config_dict["test_use_gold_mentions"]:
-        event_response_filename = os.path.join(args.out_dir, 'CD_test_event_mention_based.response_conll')
-        entity_response_filename = os.path.join(args.out_dir, 'CD_test_entity_mention_based.response_conll')
+        event_response_filename = out_dir+'CD_test_event_mention_based.response_conll'
+        entity_response_filename = out_dir+'CD_test_entity_mention_based.response_conll'
     else:
-        event_response_filename = os.path.join(args.out_dir, 'CD_test_event_span_based.response_conll')
-        entity_response_filename = os.path.join(args.out_dir, 'CD_test_entity_span_based.response_conll')
+        event_response_filename = out_dir+ 'CD_test_event_span_based.response_conll'
+        entity_response_filename = out_dir+ 'CD_test_entity_span_based.response_conll'
 
-    event_conll_file = os.path.join(args.out_dir,'event_scorer_cd_out.txt')
-    entity_conll_file = os.path.join(args.out_dir,'entity_scorer_cd_out.txt')
+    event_conll_file = out_dir+'event_scorer_cd_out.txt'
+    entity_conll_file = out_dir+'entity_scorer_cd_out.txt'
 
     event_scorer_command = ('perl scorer/scorer.pl all {} {} none > {} \n'.format
             (config_dict["event_gold_file_path"], event_response_filename, event_conll_file))
@@ -120,7 +121,7 @@ def run_conll_scorer(config_dict):
     print ('Running scorers has been done.')
     print ('Save results...')
 
-    scores_file = open(os.path.join(args.out_dir, 'conll_f1_scores.txt'), 'w')
+    scores_file = open(out_dir+'conll_f1_scores.txt', 'w')
 
     event_f1 = read_conll_f1(event_conll_file)
     entity_f1 = read_conll_f1(entity_conll_file)
