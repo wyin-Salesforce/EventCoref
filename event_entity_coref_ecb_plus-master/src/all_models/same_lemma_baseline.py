@@ -170,7 +170,7 @@ def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
 
 
                     # if lemma_cos > 0.6:
-                    if comprehend_cos > 0.6
+                    if comprehend_cos > 0.6:
                         if mention_i.gold_tag == mention_j.gold_tag:
                             diff_lemma_error_after-=1
                         list_of_list_mention[list_id].append(mention_i)
