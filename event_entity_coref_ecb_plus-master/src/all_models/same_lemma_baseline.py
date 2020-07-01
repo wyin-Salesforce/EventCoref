@@ -143,10 +143,10 @@ def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
                 else:
                     full_mention_cos = 0.0
                 if mention_i.mention_head_lemma == mention_j.mention_head_lemma:
-                    if mention_i.gold_tag != mention_j.gold_tag:
-                        print('mention i:', mention_i)
-                        print('mention j:', mention_i)
-                    if full_mention_cos < 0.22:
+                    # if mention_i.gold_tag != mention_j.gold_tag:
+                    #     print('mention i:', mention_i)
+                    #     print('mention j:', mention_i)
+                    if full_mention_cos < 0.24:
                         continue
                     '''put in this list'''
                     list_of_list_mention[list_id].append(mention_i)
