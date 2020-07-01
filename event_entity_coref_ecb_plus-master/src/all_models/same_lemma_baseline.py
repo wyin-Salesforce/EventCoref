@@ -120,7 +120,7 @@ def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
                 max_list_index = list_index
 
         '''lemma_i start a new list'''
-        if max_similarity < 0.4:
+        if max_similarity < 0.6:
             list_of_list_lemmas.append([lemma_i])
         else:
             '''if means lemma_i should be put in max_list_index'''
@@ -207,7 +207,7 @@ def run_same_lemmma_baseline(test_set):
         # set_coref_chain_to_mentions(entity_clusters, is_event=False,
         #                             is_gold=config_dict["test_use_gold_mentions"],intersect_with_gold=True
         #                             ,remove_singletons=config_dict["remove_singletons"])
-        '''remove parameter remove_singletons'''
+        '''remove parameter: remove_singletons'''
         set_coref_chain_to_mentions(event_clusters, is_event=True,
                                     is_gold=config_dict["test_use_gold_mentions"],intersect_with_gold=True)
         set_coref_chain_to_mentions(entity_clusters, is_event=False,
