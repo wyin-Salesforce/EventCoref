@@ -102,7 +102,8 @@ def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
     mentions_by_head_lemma = {}
     clusters = []
 
-
+    same_lemma_error=0
+    diff_lemma_error=0
     list_of_list_mention=[]
     list_of_list_mention.append([mentions[0]])
     for mention_i in mentions[1:]:
@@ -143,9 +144,10 @@ def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
                 else:
                     full_mention_cos = 0.0
                 if mention_i.mention_head_lemma == mention_j.mention_head_lemma:
-                    # if mention_i.gold_tag != mention_j.gold_tag:
-                    #     print('mention i:', mention_i)
-                    #     print('mention j:', mention_j)
+                    if mention_i.gold_tag != mention_j.gold_tag:
+                        # print('mention i:', mention_i)
+                        # print('mention j:', mention_j)
+                        same_lemma_error+=1
                     if full_mention_cos < 0.22:
                         continue
                     '''put in this list'''
@@ -154,6 +156,8 @@ def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
                     break
                 else:
                     '''add extra beyong lemma matching'''
+                    if mention_i.gold_tag == mention_j.gold_tag:
+                        diff_lemma_error+=1
 
                     if lemma_cos > 0.6:
                         list_of_list_mention[list_id].append(mention_i)
@@ -167,7 +171,8 @@ def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
             list_of_list_mention.append([mention_i])
 
 
-
+    print('same_lemma_error:', same_lemma_error, 'diff_lemma_error:', diff_lemma_error)
+    exit(0)
     # for head_lemma, mentions in mentions_by_head_lemma.items():
     # for head_lemma, mentions in new_mentions_by_head_lemma.items():
     for mentions in list_of_list_mention:
