@@ -96,9 +96,22 @@ def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
     for mention_i in mentions[1:]:
         insert=False
         vec_i = word2vec.get(mention_i.mention_head_lemma)
+        mention_i_arg1 = mention_i.arg0[0] if mention_i.arg0 is not None else None
+        mention_i_arg2 = mention_i.arg1[0] if mention_i.arg1 is not None else None
+        mention_i_amtmp = mention_i.amtmp[0] if mention_i.amtmp is not None else None
+        mention_i_amloc = mention_i.amloc[0] if mention_i.amloc is not None else None
+
         for list_id, mention_list in enumerate(list_of_list_mention):
             for mention_j in mention_list:
+                mention_j_arg1 = mention_j.arg0[0] if mention_j.arg0 is not None else None
+                mention_j_arg2 = mention_j.arg1[0] if mention_j.arg1 is not None else None
+                mention_j_amtmp = mention_j.amtmp[0] if mention_j.amtmp is not None else None
+                mention_j_amloc = mention_j.amloc[0] if mention_j.amloc is not None else None
                 if mention_i.mention_head_lemma == mention_j.mention_head_lemma:
+                    if (mention_i_arg1 is not None and mention_j_arg1 is not None) and (mention_i_arg1 != mention_j_arg1) or /
+                        (mention_i_arg2 is not None and mention_j_arg2 is not None) and (mention_i_arg2 != mention_j_arg2):
+                        continue
+                        
                     '''put in this list'''
                     list_of_list_mention[list_id].append(mention_i)
                     insert=True
@@ -225,5 +238,5 @@ if __name__ == '__main__':
 '''
 python same_lemma_baseline.py --config_path ../../lemma_baseline_config.json --out_dir wenpeng/
 
-0.7: 77.07
+0.6: 77.26
 '''
