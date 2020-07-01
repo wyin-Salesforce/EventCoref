@@ -47,10 +47,11 @@ def get_clusters_by_head_lemma(mentions, is_event):
     clusters = []
 
     for mention in mentions:
+        print('mention:', mention, mention.mention_head_lemma)
         if mention.mention_head_lemma not in mentions_by_head_lemma:
             mentions_by_head_lemma[mention.mention_head_lemma] = []
         mentions_by_head_lemma[mention.mention_head_lemma].append(mention)
-
+    exit(0)
     for head_lemma, mentions in mentions_by_head_lemma.items():
         cluster = Cluster(is_event=is_event)
         for mention in mentions:
