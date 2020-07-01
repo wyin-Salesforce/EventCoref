@@ -103,7 +103,9 @@ def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
     clusters = []
 
     same_lemma_error=0
+    same_lemma_error_after=0
     diff_lemma_error=0
+    diff_lemma_error_after=0
     list_of_list_mention=[]
     list_of_list_mention.append([mentions[0]])
     for mention_i in mentions[1:]:
@@ -145,12 +147,14 @@ def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
                     full_mention_cos = 0.0
                 if mention_i.mention_head_lemma == mention_j.mention_head_lemma:
                     if mention_i.gold_tag != mention_j.gold_tag:
-                        print('mention i:', mention_i)
-                        print('mention j:', mention_j)
+                        # print('mention i:', mention_i)
+                        # print('mention j:', mention_j)
                         same_lemma_error+=1
                     if full_mention_cos < 0.22:
                         continue
                     '''put in this list'''
+                    if mention_i.gold_tag != mention_j.gold_tag:
+                        same_lemma_error_after+=1
                     list_of_list_mention[list_id].append(mention_i)
                     insert=True
                     break
@@ -158,8 +162,11 @@ def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
                     '''add extra beyong lemma matching'''
                     if mention_i.gold_tag == mention_j.gold_tag:
                         diff_lemma_error+=1
+                        diff_lemma_error_after+=1
 
                     if lemma_cos > 0.6:
+                        if mention_i.gold_tag == mention_j.gold_tag:
+                            diff_lemma_error_after-=1
                         list_of_list_mention[list_id].append(mention_i)
                         insert=True
                         break
@@ -172,6 +179,7 @@ def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
 
 
     print('same_lemma_error:', same_lemma_error, 'diff_lemma_error:', diff_lemma_error)
+    print('same_lemma_error_after:', same_lemma_error_after, 'diff_lemma_error_after:', diff_lemma_error_after)
 
     # for head_lemma, mentions in mentions_by_head_lemma.items():
     # for head_lemma, mentions in new_mentions_by_head_lemma.items():
