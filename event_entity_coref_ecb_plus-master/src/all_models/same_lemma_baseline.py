@@ -151,6 +151,8 @@ def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
                         # print('mention j:', mention_j)
                         same_lemma_error+=1
                     if full_mention_cos < 0.22:
+                        if mention_i.gold_tag == mention_j.gold_tag:
+                            same_lemma_error_after+=1
                         continue
                     '''put in this list'''
                     if mention_i.gold_tag != mention_j.gold_tag:
@@ -163,19 +165,23 @@ def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
                     '''add extra beyong lemma matching'''
                     if mention_i.gold_tag == mention_j.gold_tag:
                         diff_lemma_error+=1
-                        diff_lemma_error_after+=1
-                        print('mention i:', mention_i, mention_i.mention_head_lemma)
-                        print('mention j:', mention_j, mention_j.mention_head_lemma)
-                        print('lemma_cos:', lemma_cos)
+                    #     diff_lemma_error_after+=1
+                    #     print('mention i:', mention_i, mention_i.mention_head_lemma)
+                    #     print('mention j:', mention_j, mention_j.mention_head_lemma)
+                    #     print('lemma_cos:', lemma_cos)
 
 
-                    # if lemma_cos > 0.6:
-                    if comprehend_cos > 0.6:
-                        if mention_i.gold_tag == mention_j.gold_tag:
-                            diff_lemma_error_after-=1
+                    if lemma_cos > 0.6:
+                        # if comprehend_cos > 0.6:
+                        if mention_i.gold_tag != mention_j.gold_tag:
+                            diff_lemma_error_after+=1
+
                         list_of_list_mention[list_id].append(mention_i)
                         insert=True
                         break
+                    else:
+                        if mention_i.gold_tag == mention_j.gold_tag:
+                            diff_lemma_error_after+=1
 
 
             if insert:
