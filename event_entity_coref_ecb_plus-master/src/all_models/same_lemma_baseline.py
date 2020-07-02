@@ -117,7 +117,7 @@ def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
         mention_i_amtmp = mention_i.amtmp[0] if mention_i.amtmp is not None else ''
         mention_i_amloc = mention_i.amloc[0] if mention_i.amloc is not None else ''
         mention_i_str = mention_i.mention_str
-        mention_i_full_str = ' '.join([mention_i_arg1, mention_i_str, mention_i_arg2])#, mention_i_amtmp, mention_i_amloc])
+        mention_i_full_str = ' '.join([mention_i_arg1, mention_i_arg2])#, mention_i_amtmp, mention_i_amloc])
         mention_i_str_emb = sent_2_emb(mention_i_str.lower().split(), word2vec)
         mention_i_full_str_emb = sent_2_emb(mention_i_full_str.lower().split(), word2vec)
         # print('mention_i gold_tag:', mention_i.gold_tag)
@@ -131,7 +131,7 @@ def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
                 mention_j_amtmp = mention_j.amtmp[0] if mention_j.amtmp is not None else ''
                 mention_j_amloc = mention_j.amloc[0] if mention_j.amloc is not None else ''
                 mention_j_str = mention_j.mention_str
-                mention_j_full_str = ' '.join([mention_j_arg1, mention_j_str, mention_j_arg2])#, mention_j_amtmp, mention_j_amloc])
+                mention_j_full_str = ' '.join([mention_j_arg1, mention_j_arg2])#, mention_j_amtmp, mention_j_amloc])
                 mention_j_str_emb = sent_2_emb(mention_j_str.lower().split(), word2vec)
                 mention_j_full_str_emb = sent_2_emb(mention_j_full_str.lower().split(), word2vec)
                 # print('mention_j gold_tag:', mention_j.gold_tag)
