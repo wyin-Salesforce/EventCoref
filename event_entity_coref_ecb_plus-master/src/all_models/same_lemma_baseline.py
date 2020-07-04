@@ -185,8 +185,8 @@ def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
             list_of_list_mention.append([mention_i])
 
 
-    print('same_lemma_error:', same_lemma_error, 'diff_lemma_error:', diff_lemma_error)
-    print('same_lemma_error_after:', same_lemma_error_after, 'diff_lemma_error_after:', diff_lemma_error_after)
+    # print('same_lemma_error:', same_lemma_error, 'diff_lemma_error:', diff_lemma_error)
+    # print('same_lemma_error_after:', same_lemma_error_after, 'diff_lemma_error_after:', diff_lemma_error_after)
 
     # for head_lemma, mentions in mentions_by_head_lemma.items():
     # for head_lemma, mentions in new_mentions_by_head_lemma.items():
