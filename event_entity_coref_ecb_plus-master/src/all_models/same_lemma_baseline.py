@@ -91,7 +91,7 @@ def sent_2_emb(wordlist, word2vec):
         arr = np.array(emb_list)
         return np.sum(arr, axis=0)
     else:
-        return np.array([0.0]*300)
+        return None#np.array([0.0]*300)
 
 def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
     '''
