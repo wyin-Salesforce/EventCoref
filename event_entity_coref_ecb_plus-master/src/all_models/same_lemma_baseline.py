@@ -177,7 +177,7 @@ def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
                         #     diff_lemma_error_after+=1
                         print('mention i:', mention_i, mention_i.mention_head_lemma)
                         print('mention j:', mention_j, mention_j.mention_head_lemma)
-                        print('lemma_cos:', lemma_cos, ' full_mention_cos:', full_mention_cos)
+                        print('lemma_cos:', lemma_cos, ' trigger_cos:', trigger_cos, ' full_mention_cos:', full_mention_cos)
 
                     # if len(set(mention_i_arg1.split()+mention_i_arg2.split()) & set(mention_j_arg1.split()+mention_j_arg2.split())) > 0:
 
