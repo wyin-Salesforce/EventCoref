@@ -142,7 +142,7 @@ def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
                 else:
                     lemma_cos = 0.0
                 if mention_i_triggerStr_emb is not None and mention_j_triggerStr_emb is not None:
-                    trigger_cos = 1.0-cosine(mention_i_triggerStr_emb, mention_i_triggerStr_emb)
+                    trigger_cos = 1.0-cosine(mention_i_triggerStr_emb, mention_j_triggerStr_emb)
                 else:
                     trigger_cos = 0.0
                 if mention_i_full_str_emb is not None and mention_j_full_str_emb is not None:
