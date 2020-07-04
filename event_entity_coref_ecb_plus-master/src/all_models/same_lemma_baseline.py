@@ -6,7 +6,7 @@ import numpy as np
 from scipy.spatial.distance import cosine
 # for pack in os.listdir("src"):
 #     sys.path.append(os.path.join("src", pack))
-
+from nltk.corpus import wordnet as wn
 sys.path.append("/export/home/workspace/EventCoref/event_entity_coref_ecb_plus-master/src/shared/")
 
 import _pickle as cPickle
@@ -93,6 +93,21 @@ def sent_2_emb(wordlist, word2vec):
     else:
         return None#np.array([0.0]*300)
 
+def wordsimi_wordnet(word1, word2):
+    # print('word1:', word1, 'wn.synsets(word1):', wn.synsets(word1))
+    word1_syn = wn.synsets(word1)
+    word2_syn = wn.synsets(word2)
+    if len(word1_syn) == 0 or len(word2_syn) ==0:
+        return 0.0
+    else:
+        word1 = word1_syn[0]
+        word2 = word2_syn[0]
+        simi = word1.wup_similarity(word2)
+        if simi is None:
+            return 0.0
+        else:
+            return simi
+
 def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
     '''
     Given a list of mentions, this function clusters mentions that share the same head lemma.
@@ -136,7 +151,8 @@ def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
                 mention_j_full_str_emb = sent_2_emb(mention_j_full_str.lower().split(), word2vec)
                 # print('mention_j gold_tag:', mention_j.gold_tag)
 
-                '''three types of cosine'''
+                '''four types of cosine'''
+                wn_cos = wordsimi_wordnet(mention_i.mention_head_lemma, mention_j.mention_head_lemma)
                 if vec_i is not None and vec_j is not None:
                     lemma_cos = 1.0-cosine(vec_i, vec_j)
                 else:
@@ -170,21 +186,27 @@ def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
                         insert=True
                         break
                 else:
-                    comprehend_cos = np.mean([lemma_cos, full_mention_cos])
+                    # comprehend_cos = np.mean([lemma_cos, full_mention_cos])
                     '''add extra beyong lemma matching'''
                     if mention_i.gold_tag == mention_j.gold_tag:
                         diff_lemma_error+=1
                         #     diff_lemma_error_after+=1
                         print('mention i:', mention_i, mention_i.mention_head_lemma)
                         print('mention j:', mention_j, mention_j.mention_head_lemma)
-                        print('lemma_cos:', lemma_cos, ' trigger_cos:', trigger_cos, ' full_mention_cos:', full_mention_cos)
+                        print('lemma_cos:', lemma_cos, ' wn_cos:', wn_cos, ' trigger_cos:', trigger_cos, ' full_mention_cos:', full_mention_cos)
 
                     # if len(set(mention_i_arg1.split()+mention_i_arg2.split()) & set(mention_j_arg1.split()+mention_j_arg2.split())) > 0:
 
 
                     # if lemma_cos > 0.6 or (lemma_cos<0.2 and full_mention_cos>0.6):# and (len(set(mention_i_arg1.split()+mention_i_arg2.split()) & set(mention_j_arg1.split()+mention_j_arg2.split())) > 0):
-                    if lemma_cos > 0.6 or trigger_cos > 0.6:
-                        # if comprehend_cos > 0.6:
+                    if wn_cos >0.3:
+                        if mention_i.gold_tag != mention_j.gold_tag:
+                            diff_lemma_error_after+=1
+
+                        list_of_list_mention[list_id].append(mention_i)
+                        insert=True
+                        break
+                    elif lemma_cos > 0.6:
                         if mention_i.gold_tag != mention_j.gold_tag:
                             diff_lemma_error_after+=1
 
