@@ -173,7 +173,7 @@ def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
                 elif wn_cos==1.0:
                     mention_list_score+=1
                 else:
-                    mention_list_score+= max(lemma_cos, trigger_cos)
+                    mention_list_score+= max(lemma_cos, trigger_cos, full_mention_cos)
 
             mention_list_score/=len(mention_list)
             if mention_list_score > 0.7:
@@ -288,6 +288,5 @@ if __name__ == '__main__':
 '''
 python same_lemma_baseline.py --config_path ../../lemma_baseline_config.json --out_dir wenpeng/
 
-0.6: 77.26
-0.6, 0.22: 77.51%; change 8/13
+0.7: 77.60
 '''
