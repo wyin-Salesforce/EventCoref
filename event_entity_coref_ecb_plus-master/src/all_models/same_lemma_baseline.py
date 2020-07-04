@@ -139,6 +139,7 @@ def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
 
 
         for list_id, mention_list in enumerate(list_of_list_mention):
+            mention_list_score = 0.0
             for mention_j in mention_list:
                 vec_j = word2vec.get(mention_j.mention_head_lemma)
                 mention_j_arg1 = mention_j.arg0[0] if mention_j.arg0 is not None else ''
@@ -168,82 +169,18 @@ def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
 
                 '''start algorithm'''
                 if mention_i.mention_head_lemma == mention_j.mention_head_lemma:
-                    if mention_i.gold_tag != mention_j.gold_tag:
-                        # print('mention i:', mention_i)
-                        # print('mention j:', mention_j)
-                        same_lemma_error+=1
-
-                    '''lemma the same, split into two cases'''
-                    if full_mention_cos < 0.22:
-                        if mention_i.gold_tag == mention_j.gold_tag:
-                            same_lemma_error_after+=1
-                        continue
-                    else:
-                        if mention_i.gold_tag != mention_j.gold_tag:
-                            same_lemma_error_after+=1
-                        '''put in this list'''
-                        list_of_list_mention[list_id].append(mention_i)
-                        insert=True
-                        break
+                    mention_list_score+=1
+                elif wn_cos==1.0:
+                    mention_list_score+=1
                 else:
-                    # comprehend_cos = np.mean([lemma_cos, full_mention_cos])
-                    '''add extra beyong lemma matching'''
-                    if mention_i.gold_tag == mention_j.gold_tag:
-                        diff_lemma_error+=1
-                        #     diff_lemma_error_after+=1
-                        # print('mention i:', mention_i, mention_i.mention_head_lemma)
-                        # print('mention j:', mention_j, mention_j.mention_head_lemma)
-                        # print('lemma_cos:', lemma_cos, ' wn_cos:', wn_cos, ' trigger_cos:', trigger_cos, ' full_mention_cos:', full_mention_cos)
+                    mention_list_score+= max(lemma_cos, trigger_cos)
 
-                    # if len(set(mention_i_arg1.split()+mention_i_arg2.split()) & set(mention_j_arg1.split()+mention_j_arg2.split())) > 0:
-
-
-                    # if lemma_cos > 0.6 or (lemma_cos<0.2 and full_mention_cos>0.6):# and (len(set(mention_i_arg1.split()+mention_i_arg2.split()) & set(mention_j_arg1.split()+mention_j_arg2.split())) > 0):
-                    if wn_cos >0.8:
-                        if trigger_cos < 0.8:
-                            if mention_i.gold_tag == mention_j.gold_tag:
-                                diff_lemma_error_after+=1
-                                print('type # 0: wordnet is high, but trigger cos is low.......')
-                                print('mention i:', mention_i, mention_i.mention_head_lemma)
-                                print('mention j:', mention_j, mention_j.mention_head_lemma)
-                                print('lemma_cos:', lemma_cos, ' wn_cos:', wn_cos, ' trigger_cos:', trigger_cos, ' full_mention_cos:', full_mention_cos)
-
-                            continue
-                        else:
-                            if mention_i.gold_tag != mention_j.gold_tag:
-                                diff_lemma_error_after+=1
-                                print('type # 1: wordnet think they are the same......')
-                                print('mention i:', mention_i, mention_i.mention_head_lemma)
-                                print('mention j:', mention_j, mention_j.mention_head_lemma)
-                                print('lemma_cos:', lemma_cos, ' wn_cos:', wn_cos, ' trigger_cos:', trigger_cos, ' full_mention_cos:', full_mention_cos)
-
-                            list_of_list_mention[list_id].append(mention_i)
-                            insert=True
-                            break
-                    elif lemma_cos > 0.6:
-                        if mention_i.gold_tag != mention_j.gold_tag:
-                            diff_lemma_error_after+=1
-                            # print('type # 2: lemma_cos>0.6 think they are the same........')
-                            # print('mention i:', mention_i, mention_i.mention_head_lemma)
-                            # print('mention j:', mention_j, mention_j.mention_head_lemma)
-                            # print('lemma_cos:', lemma_cos, ' wn_cos:', wn_cos, ' trigger_cos:', trigger_cos, ' full_mention_cos:', full_mention_cos)
-
-                        list_of_list_mention[list_id].append(mention_i)
-                        insert=True
-                        break
-                    else:
-                        if mention_i.gold_tag == mention_j.gold_tag:
-                            diff_lemma_error_after+=1
-                            # print('type # 3: can not find any clue they are the same.......')
-                            # print('mention i:', mention_i, mention_i.mention_head_lemma)
-                            # print('mention j:', mention_j, mention_j.mention_head_lemma)
-                            # print('lemma_cos:', lemma_cos, ' wn_cos:', wn_cos, ' trigger_cos:', trigger_cos, ' full_mention_cos:', full_mention_cos)
-
-                        continue
-
-
-            if insert:
+            mention_list_score/=len(mention_list)
+            if mention_list_score > 0.5:
+                list_of_list_mention[list_id].append(mention_i)
+                insert=True
                 break
+
         if not insert:
             list_of_list_mention.append([mention_i])
 
