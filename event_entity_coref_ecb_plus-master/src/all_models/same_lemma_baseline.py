@@ -151,16 +151,19 @@ def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
                         # print('mention i:', mention_i)
                         # print('mention j:', mention_j)
                         same_lemma_error+=1
+
+                    '''lemma the same, split into two cases'''
                     if full_mention_cos < 0.22:
                         if mention_i.gold_tag == mention_j.gold_tag:
                             same_lemma_error_after+=1
                         continue
-                    '''put in this list'''
-                    if mention_i.gold_tag != mention_j.gold_tag:
-                        same_lemma_error_after+=1
-                    list_of_list_mention[list_id].append(mention_i)
-                    insert=True
-                    break
+                    else:
+                        if mention_i.gold_tag != mention_j.gold_tag:
+                            same_lemma_error_after+=1
+                        '''put in this list'''
+                        list_of_list_mention[list_id].append(mention_i)
+                        insert=True
+                        break
                 else:
                     comprehend_cos = np.mean([lemma_cos, full_mention_cos])
                     '''add extra beyong lemma matching'''
@@ -174,7 +177,7 @@ def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
                     # if len(set(mention_i_arg1.split()+mention_i_arg2.split()) & set(mention_j_arg1.split()+mention_j_arg2.split())) > 0:
 
 
-                    if lemma_cos > 0.6 and full_mention_cos > 0.6:# and (len(set(mention_i_arg1.split()+mention_i_arg2.split()) & set(mention_j_arg1.split()+mention_j_arg2.split())) > 0):
+                    if lemma_cos > 0.6 or (lemma_cos<0.2 and full_mention_cos>0.6):# and (len(set(mention_i_arg1.split()+mention_i_arg2.split()) & set(mention_j_arg1.split()+mention_j_arg2.split())) > 0):
                         # if comprehend_cos > 0.6:
                         if mention_i.gold_tag != mention_j.gold_tag:
                             diff_lemma_error_after+=1
@@ -185,6 +188,7 @@ def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
                     else:
                         if mention_i.gold_tag == mention_j.gold_tag:
                             diff_lemma_error_after+=1
+                        continue
 
 
             if insert:
