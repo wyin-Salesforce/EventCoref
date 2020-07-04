@@ -167,7 +167,7 @@ def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
                     full_mention_cos = 0.0
 
                 '''start algorithm'''
-                if mention_i.mention_head_lemma == mention_j.mention_head_lemma or wn_cos==1.0:
+                if mention_i.mention_head_lemma == mention_j.mention_head_lemma:
                     if mention_i.gold_tag != mention_j.gold_tag:
                         # print('mention i:', mention_i)
                         # print('mention j:', mention_j)
@@ -199,8 +199,8 @@ def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
 
 
                     # if lemma_cos > 0.6 or (lemma_cos<0.2 and full_mention_cos>0.6):# and (len(set(mention_i_arg1.split()+mention_i_arg2.split()) & set(mention_j_arg1.split()+mention_j_arg2.split())) > 0):
-                    if wn_cos >0.6:
-                        if trigger_cos < 0.6:
+                    if wn_cos >0.8:
+                        if full_mention_cos < 0.6:
                             if mention_i.gold_tag == mention_j.gold_tag:
                                 diff_lemma_error_after+=1
                                 print('type # 0: wordnet is high, but trigger cos is low.......')
