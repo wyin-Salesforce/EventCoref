@@ -213,10 +213,10 @@ def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
                     elif lemma_cos > 0.6:
                         if mention_i.gold_tag != mention_j.gold_tag:
                             diff_lemma_error_after+=1
-                            print('type # 2: lemma_cos>0.6 think they are the same........')
-                            print('mention i:', mention_i, mention_i.mention_head_lemma)
-                            print('mention j:', mention_j, mention_j.mention_head_lemma)
-                            print('lemma_cos:', lemma_cos, ' wn_cos:', wn_cos, ' trigger_cos:', trigger_cos, ' full_mention_cos:', full_mention_cos)
+                            # print('type # 2: lemma_cos>0.6 think they are the same........')
+                            # print('mention i:', mention_i, mention_i.mention_head_lemma)
+                            # print('mention j:', mention_j, mention_j.mention_head_lemma)
+                            # print('lemma_cos:', lemma_cos, ' wn_cos:', wn_cos, ' trigger_cos:', trigger_cos, ' full_mention_cos:', full_mention_cos)
 
                         list_of_list_mention[list_id].append(mention_i)
                         insert=True
@@ -224,10 +224,10 @@ def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
                     else:
                         if mention_i.gold_tag == mention_j.gold_tag:
                             diff_lemma_error_after+=1
-                            print('type # 3: can not find any clue they are the same.......')
-                            print('mention i:', mention_i, mention_i.mention_head_lemma)
-                            print('mention j:', mention_j, mention_j.mention_head_lemma)
-                            print('lemma_cos:', lemma_cos, ' wn_cos:', wn_cos, ' trigger_cos:', trigger_cos, ' full_mention_cos:', full_mention_cos)
+                            # print('type # 3: can not find any clue they are the same.......')
+                            # print('mention i:', mention_i, mention_i.mention_head_lemma)
+                            # print('mention j:', mention_j, mention_j.mention_head_lemma)
+                            # print('lemma_cos:', lemma_cos, ' wn_cos:', wn_cos, ' trigger_cos:', trigger_cos, ' full_mention_cos:', full_mention_cos)
 
                         continue
 
