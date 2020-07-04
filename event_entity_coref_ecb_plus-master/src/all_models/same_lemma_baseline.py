@@ -176,7 +176,7 @@ def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
                     mention_list_score+= max(lemma_cos, trigger_cos)
 
             mention_list_score/=len(mention_list)
-            if mention_list_score > 0.85:
+            if mention_list_score > 0.7:
                 list_of_list_mention[list_id].append(mention_i)
                 insert=True
                 break
