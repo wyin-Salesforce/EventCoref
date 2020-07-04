@@ -174,7 +174,7 @@ def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
                     # if len(set(mention_i_arg1.split()+mention_i_arg2.split()) & set(mention_j_arg1.split()+mention_j_arg2.split())) > 0:
 
 
-                    if lemma_cos > 0.6 and (len(set(mention_i_arg1.split()+mention_i_arg2.split()) & set(mention_j_arg1.split()+mention_j_arg2.split())) > 0):
+                    if lemma_cos > 0.6:# and (len(set(mention_i_arg1.split()+mention_i_arg2.split()) & set(mention_j_arg1.split()+mention_j_arg2.split())) > 0):
                         # if comprehend_cos > 0.6:
                         if mention_i.gold_tag != mention_j.gold_tag:
                             diff_lemma_error_after+=1
