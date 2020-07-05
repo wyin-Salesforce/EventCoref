@@ -177,8 +177,9 @@ def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
 
 
             mean_mention_list_score = mention_list_score/len(mention_list)
-            mean_mention_list_score= mean_mention_list_score * (1+len(mention_list)/50)
             if mean_mention_list_score > 0.7:
+                print('list_of_list_mention[list_id]:', list_of_list_mention[list_id])
+                print('mention_i:', mention_i)
                 list_of_list_mention[list_id].append(mention_i)
                 insert=True
                 break
