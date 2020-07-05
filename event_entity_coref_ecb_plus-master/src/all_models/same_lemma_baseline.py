@@ -175,11 +175,8 @@ def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
                 else:
                     mention_list_score+= max(lemma_cos, trigger_cos)
 
-
-            mean_mention_list_score = mention_list_score/len(mention_list)
-            if mean_mention_list_score > 0.7:
-                print('list_of_list_mention[list_id]:', list_of_list_mention[list_id])
-                print('mention_i:', mention_i)
+            mention_list_score/=len(mention_list)
+            if mention_list_score > 0.7:
                 list_of_list_mention[list_id].append(mention_i)
                 insert=True
                 break
@@ -188,6 +185,11 @@ def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
             list_of_list_mention.append([mention_i])
 
 
+    print('same_lemma_error:', same_lemma_error, 'diff_lemma_error:', diff_lemma_error)
+    print('same_lemma_error_after:', same_lemma_error_after, 'diff_lemma_error_after:', diff_lemma_error_after)
+
+    # for head_lemma, mentions in mentions_by_head_lemma.items():
+    # for head_lemma, mentions in new_mentions_by_head_lemma.items():
     for mentions in list_of_list_mention:
         cluster = Cluster(is_event=is_event)
         for mention in mentions:
@@ -286,5 +288,6 @@ if __name__ == '__main__':
 '''
 python same_lemma_baseline.py --config_path ../../lemma_baseline_config.json --out_dir wenpeng/
 
-0.7: 77.60
+0.6: 77.26
+0.6, 0.22: 77.51%; change 8/13
 '''
