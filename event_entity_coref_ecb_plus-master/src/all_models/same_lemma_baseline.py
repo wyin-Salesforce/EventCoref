@@ -180,7 +180,7 @@ def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
             if mean_mention_list_score > max_score_all_mention_list:
                 max_score_all_mention_list = mean_mention_list_score
                 best_list_id = list_id
-        if max_score_all_mention_list > 0.7:
+        if max_score_all_mention_list > 0.8:
             list_of_list_mention[best_list_id].append(mention_i)
             # insert=True
         else:
