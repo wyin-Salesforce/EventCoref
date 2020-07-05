@@ -179,7 +179,7 @@ def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
             if mention_list_score > 0.7:
                 list_of_list_mention[list_id].append(mention_i)
                 for mention_k in list_of_list_mention[list_id]:
-                    if mention_i.coref_chain != mention_k.coref_chain:
+                    if mention_i.gold_tag != mention_k.gold_tag:
                         print('mention_i:', mention_i)
                         for mention_m in list_of_list_mention[list_id]:
                             print('.........mention_m:', mention_m)
