@@ -170,12 +170,13 @@ def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
                 '''start algorithm'''
                 if mention_i.mention_head_lemma == mention_j.mention_head_lemma:
                     mention_list_score+=1
-                elif wn_cos==0.8:
+                elif wn_cos==1.0:
                     mention_list_score+=1
                 else:
                     mention_list_score+= max(lemma_cos, trigger_cos)
 
             mention_list_score/=len(mention_list)
+            mention_list_score*= (len(mention_list)+1)/len(mention_list)
             if mention_list_score > 0.7:
                 list_of_list_mention[list_id].append(mention_i)
                 insert=True
@@ -185,11 +186,6 @@ def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
             list_of_list_mention.append([mention_i])
 
 
-    # print('same_lemma_error:', same_lemma_error, 'diff_lemma_error:', diff_lemma_error)
-    # print('same_lemma_error_after:', same_lemma_error_after, 'diff_lemma_error_after:', diff_lemma_error_after)
-
-    # for head_lemma, mentions in mentions_by_head_lemma.items():
-    # for head_lemma, mentions in new_mentions_by_head_lemma.items():
     for mentions in list_of_list_mention:
         cluster = Cluster(is_event=is_event)
         for mention in mentions:
