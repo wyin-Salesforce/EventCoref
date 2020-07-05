@@ -137,8 +137,7 @@ def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
         mention_i_full_str_emb = sent_2_emb(mention_i_full_str.lower().split(), word2vec)
         # print('mention_i gold_tag:', mention_i.gold_tag)
 
-        max_score_all_mention_list = 0.0
-        best_list_id = -1
+
         for list_id, mention_list in enumerate(list_of_list_mention):
             mention_list_score = 0.0
             for mention_j in mention_list:
@@ -176,14 +175,15 @@ def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
                 else:
                     mention_list_score+= max(lemma_cos, trigger_cos)
 
+
             mean_mention_list_score = mention_list_score/len(mention_list)
-            if mean_mention_list_score > max_score_all_mention_list:
-                max_score_all_mention_list = mean_mention_list_score
-                best_list_id = list_id
-        if max_score_all_mention_list > 0.6:
-            list_of_list_mention[best_list_id].append(mention_i)
-            # insert=True
-        else:
+            mean_mention_list_score= mean_mention_list_score * (1+len(mention_list)/50)
+            if mean_mention_list_score > 0.7:
+                list_of_list_mention[list_id].append(mention_i)
+                insert=True
+                break
+
+        if not insert:
             list_of_list_mention.append([mention_i])
 
 
