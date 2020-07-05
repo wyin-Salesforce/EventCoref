@@ -172,8 +172,10 @@ def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
                     mention_list_score+=1
                 elif wn_cos==1.0:
                     mention_list_score+=1
-                else:
+                elif mention_i.doc_id == mention_j.doc_id and abs(int(mention_i.sent_id)-int(mention_j.sent_id)) < 5:
                     mention_list_score+= max(lemma_cos, trigger_cos)
+                else:
+                    mention_list_score+= max(lemma_cos, trigger_cos, full_mention_cos)
 
             mention_list_score/=len(mention_list)
             if mention_list_score > 0.7:
