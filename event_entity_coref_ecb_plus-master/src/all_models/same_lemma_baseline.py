@@ -172,6 +172,7 @@ def get_clusters_by_head_lemma_wenpeng(topic, mentions, word2vec, bert_model, to
     diff_lemma_error_after=0
     list_of_list_mention=[]
     list_of_list_mention.append([mentions[0]])
+    mention_2_bertEmb = {}
     for mention_i in mentions[1:]:
         insert=False
         vec_i = word2vec.get(mention_i.mention_head_lemma)
@@ -186,7 +187,10 @@ def get_clusters_by_head_lemma_wenpeng(topic, mentions, word2vec, bert_model, to
         # print('mention_i gold_tag:', mention_i.gold_tag)
 
         mention_i_sen = topic.docs[mention_i.doc_id].sentences[mention_i.sent_id].get_raw_sentence()
-        mention_i_bert_rep = trigger_BERT_rep(bert_model, tokenizer, mention_i_sen, mention_i_str)
+        mention_i_bert_rep = mention_2_bertEmb.get(mention_i)
+        if mention_i_bert_rep is None:
+            mention_i_bert_rep = trigger_BERT_rep(bert_model, tokenizer, mention_i_sen, mention_i_str)
+            mention_2_bertEmb[mention_i] = mention_i_bert_rep
         # print('mention_i_bert_rep:', mention_i_bert_rep)
         # exit(0)
         for list_id, mention_list in enumerate(list_of_list_mention):
@@ -202,7 +206,10 @@ def get_clusters_by_head_lemma_wenpeng(topic, mentions, word2vec, bert_model, to
                 mention_j_triggerStr_emb = sent_2_emb(mention_j_str.lower().split(), word2vec)
                 mention_j_full_str_emb = sent_2_emb(mention_j_full_str.lower().split(), word2vec)
                 mention_j_sen = topic.docs[mention_j.doc_id].sentences[mention_j.sent_id].get_raw_sentence()
-                mention_j_bert_rep = trigger_BERT_rep(bert_model, tokenizer, mention_j_sen, mention_j_str)
+                mention_j_bert_rep = mention_2_bertEmb.get(mention_j)
+                if mention_j_bert_rep is None:
+                    mention_j_bert_rep = trigger_BERT_rep(bert_model, tokenizer, mention_j_sen, mention_j_str)
+                    mention_2_bertEmb[mention_j] = mention_j_bert_rep
                 # print('mention_j gold_tag:', mention_j.gold_tag)
 
                 '''five types of cosine'''
@@ -220,7 +227,7 @@ def get_clusters_by_head_lemma_wenpeng(topic, mentions, word2vec, bert_model, to
                     full_mention_cos = 1.0-cosine(mention_i_full_str_emb, mention_j_full_str_emb)
                 else:
                     full_mention_cos = 0.0
-                print('bert_cosine:', bert_cosine, 'wn_cos:', wn_cos, 'lemma_cos:', lemma_cos, 'trigger_cos:', trigger_cos, 'full_mention_cos:', full_mention_cos)
+                # print('bert_cosine:', bert_cosine, 'wn_cos:', wn_cos, 'lemma_cos:', lemma_cos, 'trigger_cos:', trigger_cos, 'full_mention_cos:', full_mention_cos)
                 '''start algorithm'''
                 if mention_i.mention_head_lemma == mention_j.mention_head_lemma:
                     mention_list_score+=1
