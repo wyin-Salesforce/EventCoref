@@ -114,7 +114,7 @@ def wordsimi_wordnet(word1, word2):
 def trigger_BERT_rep(bert_model, tokenizer, sentence, trigger_str):
     sentence_wordlist = sentence.split()
     trigger_len = len(trigger_str.split())
-    trigger_index = sentence_wordlist.find(trigger_str)
+    trigger_index = sentence_wordlist.index(trigger_str)
     left_wordlist = sentence_wordlist[:trigger_index]
     right_wordlist = sentence_wordlist[trigger_index+trigger_len:]
     left_context = ' '.join(left_wordlist)
