@@ -139,7 +139,7 @@ def get_clusters_by_head_lemma_wenpeng(topic, mentions, word2vec, is_event):
 
         mention_i_doc_id = mention_i.doc_id
         mention_i_sen_id = mention_i.sent_id
-        mention_i_sen = topic.docs[mention_i_doc_id].sentences[mention_i_sen_id]
+        mention_i_sen = topic.docs[mention_i_doc_id].sentences[mention_i_sen_id].get_raw_sentence()
         print('mention_i', mention_i)
         print('mention_i_sen:', mention_i_sen)
         exit(0)
