@@ -8,13 +8,16 @@ from scipy.spatial.distance import cosine
 #     sys.path.append(os.path.join("src", pack))
 from nltk.corpus import wordnet as wn
 sys.path.append("/export/home/workspace/EventCoref/event_entity_coref_ecb_plus-master/src/shared/")
-
+import torch
 import _pickle as cPickle
 import logging
 import argparse
 from classes import *
 from model_utils import *
 from predict_model_wenpeng import run_conll_scorer
+from transformers.tokenization_bert import BertTokenizer
+# from transformers.optimization import AdamW
+from transformers.modeling_bert import BertModel#RobertaForSequenceClassification
 
 parser = argparse.ArgumentParser(description='Run same lemma baseline')
 
@@ -108,7 +111,39 @@ def wordsimi_wordnet(word1, word2):
         else:
             return simi
 
-def get_clusters_by_head_lemma_wenpeng(topic, mentions, word2vec, is_event):
+def trigger_BERT_rep(bert_model, tokenizer, sentence, trigger_str):
+    sentence_wordlist = sentence.split()
+    trigger_len = len(trigger_str.split())
+    trigger_index = sentence_wordlist.find(trigger_str)
+    left_wordlist = sentence_wordlist[:trigger_index]
+    right_wordlist = sentence_wordlist[trigger_index+trigger_len:]
+    left_context = ' '.join(left_wordlist)
+    right_context = ' '.join(right_wordlist)
+
+    left_tokenized = tokenizer.tokenize('[CLS] ' + left_context)
+    trigger_tokenized = tokenizer.tokenize(trigger_str)
+    right_tokenized = tokenizer.tokenize(right_context + ' [SEP]')
+
+    left_boundary_token_position = len(left_tokenized)
+    right_boundary_token_position = len(left_tokenized+trigger_tokenized)-1
+    tokenized_text = left_tokenized+trigger_tokenized+right_tokenized
+
+    indexed_tokens = tokenizer.convert_tokens_to_ids(tokenized_text)
+    segments_ids = [1] * len(tokenized_text)
+    input_ids = torch.tensor([indexed_tokens])
+    segments_tensors = torch.tensor([segments_ids])
+
+    with torch.no_grad():
+        # last_hidden_states = model(input_ids, segments_tensors)[0][0]
+        outputs = bert_model(input_ids, segments_tensors)
+    last_hidden_states = outputs[0] #(batch, maxlen, hidden_size)
+    left_token_rep = last_hidden_states[:, left_boundary_token_position,:]
+    right_token_rep = last_hidden_states[:, right_boundary_token_position,:]
+    trigger_rep_concate = torch.cat([left_token_rep, right_token_rep], dim=0) #(2, hidden)
+    trigger_rep = torch.mean(trigger_rep_concate, dim=0) #hidden
+    return trigger_rep
+
+def get_clusters_by_head_lemma_wenpeng(topic, mentions, word2vec, bert_model, tokenizer, is_event):
     '''
     Given a list of mentions, this function clusters mentions that share the same head lemma.
     :param mentions: list of Mention objects (can be event or entity mentions)
@@ -140,10 +175,10 @@ def get_clusters_by_head_lemma_wenpeng(topic, mentions, word2vec, is_event):
         mention_i_doc_id = mention_i.doc_id
         mention_i_sen_id = mention_i.sent_id
         mention_i_sen = topic.docs[mention_i_doc_id].sentences[mention_i_sen_id].get_raw_sentence()
-        print('mention_i', mention_i)
-        print('mention_i_sen:', mention_i_sen)
+        # tokenized_text = tokenizer.tokenize('[CLS] ' + mention_i_sen + ' [SEP]')
+        mention_i_bert_rep = trigger_BERT_rep(bert_model, tokenizer, mention_i_sen, mention_i_str)
+        print('mention_i_bert_rep:', mention_i_bert_rep)
         exit(0)
-
         for list_id, mention_list in enumerate(list_of_list_mention):
             mention_list_score = 0.0
             for mention_j in mention_list:
@@ -231,6 +266,9 @@ def run_same_lemmma_baseline(test_set):
     Runs the head lemma baseline and writes its predicted clusters.
     :param test_set: A Corpus object representing the test set.
     '''
+    tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
+    bert_model = BertModel.from_pretrained('bert-base-uncased', output_hidden_states = True)
+    bert_model.eval()
     word2vec = load_word2vec()
     topics_counter = 0
     if config_dict["merge_sub_topics_to_topics"]:
@@ -251,7 +289,7 @@ def run_same_lemmma_baseline(test_set):
 
         event_mentions, entity_mentions = topic_to_mention_list(topic, is_gold=config_dict["test_use_gold_mentions"])
 
-        event_clusters, decrease_same_lemma_i,  decrease_diff_lemma_i= get_clusters_by_head_lemma_wenpeng(topic, event_mentions, word2vec,  is_event=True)
+        event_clusters, decrease_same_lemma_i,  decrease_diff_lemma_i= get_clusters_by_head_lemma_wenpeng(topic, event_mentions, word2vec, bert_model, tokenizer, is_event=True)
         entity_clusters = get_clusters_by_head_lemma(entity_mentions,  is_event=False)
 
         decrease_same_lemma+=decrease_same_lemma_i

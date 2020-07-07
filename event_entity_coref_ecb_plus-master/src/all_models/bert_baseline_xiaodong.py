@@ -345,6 +345,7 @@ def get_bert_vec(model, tokenizer, sentence):
 
         # print(token, tokenized_text[i])
         # if token == tokenized_text[i].replace('Ġ', ''):
+        '''when the sentence word is the same with the wordpiece word'''
         if token == tokenized_text[i]:
             mapping_tokenized.append([i])
             i += 1
@@ -552,4 +553,3 @@ if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
     logger = logging.getLogger(__name__)
     main()
-
