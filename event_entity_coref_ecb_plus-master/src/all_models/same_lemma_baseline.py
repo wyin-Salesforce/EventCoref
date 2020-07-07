@@ -108,7 +108,7 @@ def wordsimi_wordnet(word1, word2):
         else:
             return simi
 
-def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
+def get_clusters_by_head_lemma_wenpeng(topic, mentions, word2vec, is_event):
     '''
     Given a list of mentions, this function clusters mentions that share the same head lemma.
     :param mentions: list of Mention objects (can be event or entity mentions)
@@ -137,6 +137,12 @@ def get_clusters_by_head_lemma_wenpeng(mentions, word2vec, is_event):
         mention_i_full_str_emb = sent_2_emb(mention_i_full_str.lower().split(), word2vec)
         # print('mention_i gold_tag:', mention_i.gold_tag)
 
+        mention_i_doc_id = mention_i.doc_id
+        mention_i_sen_id = mention_i.sent_id
+        mention_i_sen = topic.docs[mention_i_doc_id].sentences[mention_i_sen_id]
+        print('mention_i', mention_i)
+        print('mention_i_sen:', mention_i_sen)
+        exit(0)
 
         for list_id, mention_list in enumerate(list_of_list_mention):
             mention_list_score = 0.0
@@ -236,7 +242,7 @@ def run_same_lemmma_baseline(test_set):
     else:
         topics = test_set.topics
     topics_keys = topics.keys()
-    print('topics_keys:', len(topics_keys))
+    print('topic size:', len(topics_keys))
     decrease_same_lemma=0
     decrease_diff_lemma=0
     for topic_id in topics_keys:
@@ -245,7 +251,7 @@ def run_same_lemmma_baseline(test_set):
 
         event_mentions, entity_mentions = topic_to_mention_list(topic, is_gold=config_dict["test_use_gold_mentions"])
 
-        event_clusters, decrease_same_lemma_i,  decrease_diff_lemma_i= get_clusters_by_head_lemma_wenpeng(event_mentions, word2vec,  is_event=True)
+        event_clusters, decrease_same_lemma_i,  decrease_diff_lemma_i= get_clusters_by_head_lemma_wenpeng(topic, event_mentions, word2vec,  is_event=True)
         entity_clusters = get_clusters_by_head_lemma(entity_mentions,  is_event=False)
 
         decrease_same_lemma+=decrease_same_lemma_i
