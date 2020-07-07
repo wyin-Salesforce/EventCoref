@@ -122,9 +122,11 @@ def trigger_BERT_rep(bert_model, tokenizer, sentence, trigger_str):
             trigger_index = i
             break
     if trigger_index == -1:
-        print('sentence:', sentence)
-        print('trigger_str:', trigger_str)
-        exit(0)
+        for i in range(len(sentence_wordlist)):
+            if sentence_wordlist[i] == trigger_wordlist[0]:
+                trigger_index = i
+                break
+    assert trigger_index != -1
     # trigger_index = sentence_wordlist.index(trigger_str)
     left_wordlist = sentence_wordlist[:trigger_index]
     right_wordlist = sentence_wordlist[trigger_index+trigger_len:]
