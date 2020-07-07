@@ -237,7 +237,7 @@ def get_clusters_by_head_lemma_wenpeng(topic, mentions, word2vec, bert_model, to
                     mention_list_score+= bert_cosine#max(lemma_cos, trigger_cos)
 
             mention_list_score/=len(mention_list)
-            if mention_list_score > 0.7:
+            if mention_list_score > 0.5:
 
                 for mention_k in list_of_list_mention[list_id]:
                     if mention_i.gold_tag != mention_k.gold_tag:
