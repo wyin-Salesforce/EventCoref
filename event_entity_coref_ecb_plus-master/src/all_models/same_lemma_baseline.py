@@ -236,7 +236,7 @@ def run_same_lemmma_baseline(test_set):
     else:
         topics = test_set.topics
     topics_keys = topics.keys()
-
+    print('topics_keys:', len(topics_keys))
     decrease_same_lemma=0
     decrease_diff_lemma=0
     for topic_id in topics_keys:
