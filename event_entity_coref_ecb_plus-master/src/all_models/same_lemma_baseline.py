@@ -3,6 +3,7 @@ import gc
 import sys
 import json
 import numpy as np
+
 from scipy.spatial.distance import cosine
 # for pack in os.listdir("src"):
 #     sys.path.append(os.path.join("src", pack))
@@ -141,7 +142,7 @@ def trigger_BERT_rep(bert_model, tokenizer, sentence, trigger_str):
     right_token_rep = last_hidden_states[:, right_boundary_token_position,:]
     trigger_rep_concate = torch.cat([left_token_rep, right_token_rep], dim=0) #(2, hidden)
     trigger_rep = torch.mean(trigger_rep_concate, dim=0) #hidden
-    return trigger_rep
+    return list(trigger_rep.numpy())
 
 def get_clusters_by_head_lemma_wenpeng(topic, mentions, word2vec, bert_model, tokenizer, is_event):
     '''
@@ -172,13 +173,10 @@ def get_clusters_by_head_lemma_wenpeng(topic, mentions, word2vec, bert_model, to
         mention_i_full_str_emb = sent_2_emb(mention_i_full_str.lower().split(), word2vec)
         # print('mention_i gold_tag:', mention_i.gold_tag)
 
-        mention_i_doc_id = mention_i.doc_id
-        mention_i_sen_id = mention_i.sent_id
-        mention_i_sen = topic.docs[mention_i_doc_id].sentences[mention_i_sen_id].get_raw_sentence()
-        # tokenized_text = tokenizer.tokenize('[CLS] ' + mention_i_sen + ' [SEP]')
+        mention_i_sen = topic.docs[mention_i.doc_id].sentences[mention_i.sent_id].get_raw_sentence()
         mention_i_bert_rep = trigger_BERT_rep(bert_model, tokenizer, mention_i_sen, mention_i_str)
-        print('mention_i_bert_rep:', mention_i_bert_rep)
-        exit(0)
+        # print('mention_i_bert_rep:', mention_i_bert_rep)
+        # exit(0)
         for list_id, mention_list in enumerate(list_of_list_mention):
             mention_list_score = 0.0
             for mention_j in mention_list:
@@ -191,9 +189,12 @@ def get_clusters_by_head_lemma_wenpeng(topic, mentions, word2vec, bert_model, to
                 mention_j_full_str = ' '.join([mention_j_arg1, mention_j_str, mention_j_arg2])#, mention_j_amtmp, mention_j_amloc])
                 mention_j_triggerStr_emb = sent_2_emb(mention_j_str.lower().split(), word2vec)
                 mention_j_full_str_emb = sent_2_emb(mention_j_full_str.lower().split(), word2vec)
+                mention_j_sen = topic.docs[mention_j.doc_id].sentences[mention_j.sent_id].get_raw_sentence()
+                mention_j_bert_rep = trigger_BERT_rep(bert_model, tokenizer, mention_j_sen, mention_j_str)
                 # print('mention_j gold_tag:', mention_j.gold_tag)
 
-                '''four types of cosine'''
+                '''five types of cosine'''
+                bert_cosine = 1.0-cosine(mention_i_bert_rep, mention_j_bert_rep)
                 wn_cos = wordsimi_wordnet(mention_i.mention_head_lemma, mention_j.mention_head_lemma)
                 if vec_i is not None and vec_j is not None:
                     lemma_cos = 1.0-cosine(vec_i, vec_j)
@@ -207,14 +208,14 @@ def get_clusters_by_head_lemma_wenpeng(topic, mentions, word2vec, bert_model, to
                     full_mention_cos = 1.0-cosine(mention_i_full_str_emb, mention_j_full_str_emb)
                 else:
                     full_mention_cos = 0.0
-
+                print('bert_cosine:', bert_cosine, 'wn_cos:', wn_cos, 'lemma_cos:', lemma_cos, 'trigger_cos:', trigger_cos, 'full_mention_cos:', full_mention_cos)
                 '''start algorithm'''
                 if mention_i.mention_head_lemma == mention_j.mention_head_lemma:
                     mention_list_score+=1
                 elif wn_cos==1.0:
                     mention_list_score+=1
                 else:
-                    mention_list_score+= max(lemma_cos, trigger_cos)
+                    mention_list_score+= bert_cosine#max(lemma_cos, trigger_cos)
 
             mention_list_score/=len(mention_list)
             if mention_list_score > 0.7:
