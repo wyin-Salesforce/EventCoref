@@ -227,7 +227,7 @@ def get_clusters_by_head_lemma_wenpeng(topic, mentions, word2vec, bert_model, to
                     full_mention_cos = 1.0-cosine(mention_i_full_str_emb, mention_j_full_str_emb)
                 else:
                     full_mention_cos = 0.0
-                # print('bert_cosine:', bert_cosine, 'wn_cos:', wn_cos, 'lemma_cos:', lemma_cos, 'trigger_cos:', trigger_cos, 'full_mention_cos:', full_mention_cos)
+                print('bert_cosine:', bert_cosine, 'wn_cos:', wn_cos, 'lemma_cos:', lemma_cos, 'trigger_cos:', trigger_cos, 'full_mention_cos:', full_mention_cos)
                 '''start algorithm'''
                 if mention_i.mention_head_lemma == mention_j.mention_head_lemma:
                     mention_list_score+=1
