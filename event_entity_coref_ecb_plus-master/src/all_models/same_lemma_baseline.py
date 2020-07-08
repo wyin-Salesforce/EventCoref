@@ -234,10 +234,11 @@ def get_clusters_by_head_lemma_wenpeng(topic, mentions, word2vec, bert_model, to
                 elif wn_cos==1.0:
                     mention_list_score+=1
                 else:
-                    mention_list_score+= max(lemma_cos, trigger_cos, bert_cosine)
+                    max_simi = max(lemma_cos, trigger_cos, bert_cosine)
+                    mention_list_score+=1 if max_simi > 0.7 else 0
 
             mention_list_score/=len(mention_list)
-            if mention_list_score > 0.7:
+            if mention_list_score ==1.0:
 
                 for mention_k in list_of_list_mention[list_id]:
                     if mention_i.gold_tag != mention_k.gold_tag:
