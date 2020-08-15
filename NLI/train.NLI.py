@@ -609,9 +609,12 @@ def main():
         dev_all_input_ids = torch.tensor([f.input_ids for f in dev_features], dtype=torch.long)
         dev_all_input_mask = torch.tensor([f.input_mask for f in dev_features], dtype=torch.long)
         dev_all_segment_ids = torch.tensor([f.segment_ids for f in dev_features], dtype=torch.long)
+        dev_all_span_a_mask = torch.tensor([f.span_a_mask for f in dev_features], dtype=torch.long)
+        dev_all_span_b_mask = torch.tensor([f.span_b_mask for f in dev_features], dtype=torch.long)
+
         dev_all_label_ids = torch.tensor([f.label_id for f in dev_features], dtype=torch.long)
 
-        dev_data = TensorDataset(dev_all_input_ids, dev_all_input_mask, dev_all_segment_ids, dev_all_label_ids)
+        dev_data = TensorDataset(dev_all_input_ids, dev_all_input_mask, dev_all_segment_ids, dev_all_span_a_mask, dev_all_span_b_mask, dev_all_label_ids)
         dev_sampler = SequentialSampler(dev_data)
         dev_dataloader = DataLoader(dev_data, sampler=dev_sampler, batch_size=args.eval_batch_size)
 
@@ -769,7 +772,7 @@ if __name__ == "__main__":
 
 '''
 
-CUDA_VISIBLE_DEVICES=5 python -u train.NLI.py --task_name rte --do_train --do_lower_case --num_train_epochs 10 --data_dir '' --output_dir '' --train_batch_size 16 --eval_batch_size 32 --learning_rate 1e-6 --max_seq_length 128 --seed 42 --kshot 3 --beta_sampling_times 1
+CUDA_VISIBLE_DEVICES=5 python -u train.NLI.py --task_name rte --do_train --do_lower_case --num_train_epochs 10 --data_dir '' --output_dir '' --train_batch_size 16 --eval_batch_size 64 --learning_rate 1e-6 --max_seq_length 128 --seed 42 --kshot 3 --beta_sampling_times 1
 
 
 '''
