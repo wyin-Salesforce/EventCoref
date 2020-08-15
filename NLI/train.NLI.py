@@ -688,8 +688,8 @@ def main():
                 optimizer.zero_grad()
                 global_step += 1
                 iter_co+=1
-                if iter_co %20==0:
-                    # if iter_co % len(train_dataloader)==0:
+                # if iter_co %20==0:
+                if iter_co % len(train_dataloader)==0:
                     '''
                     start evaluate on dev set after this epoch
                     '''
@@ -772,7 +772,7 @@ if __name__ == "__main__":
 
 '''
 
-CUDA_VISIBLE_DEVICES=5 python -u train.NLI.py --task_name rte --do_train --do_lower_case --num_train_epochs 10 --data_dir '' --output_dir '' --train_batch_size 16 --eval_batch_size 64 --learning_rate 1e-6 --max_seq_length 128 --seed 42 --kshot 3 --beta_sampling_times 1
+CUDA_VISIBLE_DEVICES=5 python -u train.NLI.py --task_name rte --do_train --do_lower_case --num_train_epochs 10 --data_dir '' --output_dir '' --train_batch_size 32 --eval_batch_size 80 --learning_rate 1e-6 --max_seq_length 128 --seed 42 --kshot 3 --beta_sampling_times 1
 
 
 '''
