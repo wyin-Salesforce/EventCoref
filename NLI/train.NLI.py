@@ -52,7 +52,7 @@ logger = logging.getLogger(__name__)
 # import torch.nn as nn
 
 bert_hidden_dim = 1024
-pretrain_model_dir = 'roberta-large' #'roberta-large' , 'roberta-large-mnli', 'bert-large-uncased'
+pretrain_model_dir = 'roberta-large-mnli' #'roberta-large' , 'roberta-large-mnli', 'bert-large-uncased'
 
 
 class RobertaForSequenceClassification(nn.Module):
