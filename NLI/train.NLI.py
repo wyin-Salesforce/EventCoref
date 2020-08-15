@@ -316,13 +316,16 @@ def convert_examples_to_features(examples, label_list, max_seq_length,
         else:
             raise KeyError(output_mode)
 
+        print('input_ids:', input_ids)
+        print('text_a:', example.text_a)
+        print('span_a_left:', example.span_a_left)
+        print('span_a_right:', example.span_a_right)
 
-        print(example.text_a)
-        print(example.span_a_left)
-        print(example.span_a_right)
-        print(input_ids)
         span_a_left, span_a_right, span_a_token_list = wordpairID_2_tokenpairID(example.text_a, example.span_a_left, example.span_a_right, input_ids, tokenizer)
         print('span_a_left, span_a_right, span_a_token_list:', span_a_left, span_a_right, span_a_token_list)
+        print('text_b:', example.text_b)
+        print('span_b_left:', example.span_b_left)
+        print('span_b_right:', example.span_b_right)
         span_b_left, span_b_right, span_b_token_list = wordpairID_2_tokenpairID(example.text_b, example.span_b_left, example.span_b_right, input_ids, tokenizer)
         print('span_b_left, span_b_right, span_b_token_list:', span_b_left, span_b_right, span_b_token_list)
         if span_a_left is None or span_b_left is None:
