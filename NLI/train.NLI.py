@@ -215,6 +215,7 @@ def wordpairID_2_tokenpairID(sentence, wordindex_left, wordindex_right, full_tok
     span = ' '.join(sentence.split()[wordindex_left: wordindex_right+1])
     span_token_list = tokenizer.tokenize(span)
     span_id_list = tokenizer.convert_tokens_to_ids(span_token_list)
+    print('span:', span, 'span_id_list:', span_id_list)
     for i in range(wordindex_left, len(full_token_id_list)-len(span_id_list)):
         if full_token_id_list[i:i+len(span_id_list)] == span_id_list:
             return i, i+len(span_id_list), span_token_list
@@ -314,7 +315,9 @@ def convert_examples_to_features(examples, label_list, max_seq_length,
 
 
         span_a_left, span_a_right, span_a_token_list = wordpairID_2_tokenpairID(example.text_a, example.span_a_left, example.span_a_right, input_ids, tokenizer)
+        print('span_a_left, span_a_right, span_a_token_list:', span_a_left, span_a_right, span_a_token_list)
         span_b_left, span_b_right, span_b_token_list = wordpairID_2_tokenpairID(example.text_b, example.span_b_left, example.span_b_right, input_ids, tokenizer)
+        print('span_b_left, span_b_right, span_b_token_list:', span_b_left, span_b_right, span_b_token_list)
         if span_a_left is None or span_b_left is None:
             '''give up this pair'''
             continue
