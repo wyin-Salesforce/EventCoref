@@ -219,6 +219,10 @@ def wordpairID_2_tokenpairID(sentence, wordindex_left, wordindex_right, full_tok
             position_two_two = i
             break
     span = ' '.join(sentence.split()[wordindex_left: wordindex_right+1])
+    if wordindex_left!=0:
+        '''this span is the begining of the sent'''
+        span=' '+span
+
     span_token_list = tokenizer.tokenize(span)
     span_id_list = tokenizer.convert_tokens_to_ids(span_token_list)
     print('span:', span, 'span_id_list:', span_id_list)
