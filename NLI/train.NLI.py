@@ -210,21 +210,31 @@ class RteProcessor(DataProcessor):
 
 
 
-def wordpairID_2_tokenpairID(sentence, wordindex_left, wordindex_right, full_token_id_list, tokenizer):
+def wordpairID_2_tokenpairID(sentence, wordindex_left, wordindex_right, full_token_id_list, tokenizer, sent_1=True):
     '''pls note that the input indices pair include the b in (a,b), but the output doesn't'''
+    '''first find the position of [2,2]'''
+    position_two_two = 0
+    for i in range(len(full_token_id_list)):
+        if full_token_id_list[i]==2 and full_token_id_list[i+1]==2:
+            position_two_two = i
+            break
     span = ' '.join(sentence.split()[wordindex_left: wordindex_right+1])
     span_token_list = tokenizer.tokenize(span)
     span_id_list = tokenizer.convert_tokens_to_ids(span_token_list)
     print('span:', span, 'span_id_list:', span_id_list)
-    for i in range(wordindex_left, len(full_token_id_list)-len(span_id_list)):
-        if full_token_id_list[i:i+len(span_id_list)] == span_id_list:
-            return i, i+len(span_id_list), span_token_list
+    if sent_1:
+        # for i in range(wordindex_left, len(full_token_id_list)-len(span_id_list)):
+        for i in range(wordindex_left, position_two_two)
+            if full_token_id_list[i:i+len(span_id_list)] == span_id_list:
+                return i, i+len(span_id_list), span_token_list
 
-    if len(full_token_id_list) - i < len(span_id_list):
-        '''no enough'''
         return None, None, span_token_list
     else:
-        print('i:', i)
+        # for i in range(wordindex_left, len(full_token_id_list)-len(span_id_list)):
+        for i in range(position_two_two+2, len(full_token_id_list))
+            if full_token_id_list[i:i+len(span_id_list)] == span_id_list:
+                return i, i+len(span_id_list), span_token_list
+
         return None, None, span_token_list
 
 
