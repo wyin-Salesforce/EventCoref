@@ -223,6 +223,9 @@ def wordpairID_2_tokenpairID(sentence, wordindex_left, wordindex_right, full_tok
     if len(full_token_id_list) - i < len(span_id_list):
         '''no enough'''
         return None, None, span_token_list
+    else:
+        print('i:', i)
+        return None, None, span_token_list
 
 
 def convert_examples_to_features(examples, label_list, max_seq_length,
@@ -314,6 +317,10 @@ def convert_examples_to_features(examples, label_list, max_seq_length,
             raise KeyError(output_mode)
 
 
+        print(example.text_a)
+        print(example.span_a_left)
+        print(example.span_a_right)
+        print(input_ids)
         span_a_left, span_a_right, span_a_token_list = wordpairID_2_tokenpairID(example.text_a, example.span_a_left, example.span_a_right, input_ids, tokenizer)
         print('span_a_left, span_a_right, span_a_token_list:', span_a_left, span_a_right, span_a_token_list)
         span_b_left, span_b_right, span_b_token_list = wordpairID_2_tokenpairID(example.text_b, example.span_b_left, example.span_b_right, input_ids, tokenizer)
