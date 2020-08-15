@@ -73,8 +73,8 @@ class RobertaForSequenceClassification(nn.Module):
         # single_train_input_ids, single_train_input_mask, single_train_segment_ids, single_train_label_ids = batch_single
         outputs_single = self.roberta_single(input_ids, input_mask, None)
         output_last_layer_tensor3 = outputs_single[0] #(batch_size, sequence_length, hidden_size)`)
-        span_a_reps = torch.sum(output_last_layer_tensor3*span_a_mask[:,:,None], dim=1) #(batch, hidden)
-        span_b_reps = torch.sum(output_last_layer_tensor3*span_b_mask[:,:,None], dim=1) #(batch, hidden)
+        span_a_reps = torch.sum(output_last_layer_tensor3*span_a_mask.unsqueeze(2), dim=1) #(batch, hidden)
+        span_b_reps = torch.sum(output_last_layer_tensor3*span_b_mask.unsqueeze(2), dim=1) #(batch, hidden)
         combined_rep = torch.cat([span_a_reps, span_b_reps, span_a_reps*span_b_reps],dim=1) #(batch, 3*hidden)
         MLP_input = torch.tanh(self.hidden_layer_0(combined_rep))#(batch, hidden)
 
