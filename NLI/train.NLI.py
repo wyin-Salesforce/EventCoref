@@ -266,10 +266,12 @@ def convert_examples_to_features(examples, label_list, max_seq_length,
             logger.info("Writing example %d of %d" % (ex_index, len(examples)))
 
         tokens_a = tokenizer.tokenize(example.text_a)
+        print('tokens_a:', tokens_a)
 
         tokens_b = None
         if example.text_b:
             tokens_b = tokenizer.tokenize(example.text_b)
+            print('tokens_b:', tokens_b)
             # Modifies `tokens_a` and `tokens_b` in place so that the total
             # length is less than the specified length.
             # Account for [CLS], [SEP], [SEP] with "- 3". " -4" for RoBERTa.
