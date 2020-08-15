@@ -106,7 +106,7 @@ class RobertaClassificationHead(nn.Module):
 class InputExample(object):
     """A single training/test example for simple sequence classification."""
 
-    def __init__(self, guid, text_a, text_b=None, label=None):
+    def __init__(self, guid, text_a=None, span_a_left=None, span_a_right=None, text_b=None, span_b_left=None, span_b_right=None, label=None):
         """Constructs a InputExample.
 
         Args:
@@ -195,7 +195,7 @@ class RteProcessor(DataProcessor):
                 if label == 1:
                     pos_size+=1
                 examples.append(
-                    InputExample(guid=guid, text_a=text_a, span_a_left=span_a_left, span_a_right=span_a_right, span_b_left=span_b_left, span_b_right=span_b_right, text_b=text_b, label=label))
+                    InputExample(guid=guid, text_a=text_a, span_a_left=span_a_left, span_a_right=span_a_right, text_b=text_b, span_b_left=span_b_left, span_b_right=span_b_right, label=label))
             line_co+=1
             # if line_co > 20000:
             #     break
@@ -208,19 +208,7 @@ class RteProcessor(DataProcessor):
         return ["entailment", "not_entailment"]
         # return ["entailment", "neutral", "contradiction"]
 
-    def _create_examples(self, lines, set_type):
-        """Creates examples for the training and dev sets."""
-        examples = []
-        for (i, line) in enumerate(lines):
-            if i == 0:
-                continue
-            guid = "%s-%s" % (set_type, line[0])
-            text_a = line[1]
-            text_b = line[2]
-            label = line[-1]
-            examples.append(
-                InputExample(guid=guid, text_a=text_a, text_b=text_b, label=label))
-        return examples
+
 
 def wordpairID_2_tokenpairID(sentence, wordindex_left, wordindex_right, full_token_id_list, tokenizer):
     '''pls note that the input indices pair include the b in (a,b), but the output doesn't'''
