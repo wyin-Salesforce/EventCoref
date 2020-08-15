@@ -708,15 +708,17 @@ def main():
                         preds = []
                         gold_label_ids = []
                         # print('Evaluating...')
-                        for input_ids, input_mask, segment_ids, label_ids in dev_or_test_dataloader:
+                        for input_ids, input_mask, segment_ids, span_a_mask, span_b_mask, label_ids in dev_or_test_dataloader:
                             input_ids = input_ids.to(device)
                             input_mask = input_mask.to(device)
                             segment_ids = segment_ids.to(device)
+                            span_a_mask = span_a_mask.to(device)
+                            span_b_mask = span_b_mask.to(device)
                             label_ids = label_ids.to(device)
                             gold_label_ids+=list(label_ids.detach().cpu().numpy())
 
                             with torch.no_grad():
-                                logits = model(input_ids, input_mask, None, None, 0.0, is_train=False)
+                                logits = model(input_ids, input_mask, span_a_mask, span_b_mask)
                             if len(preds) == 0:
                                 preds.append(logits.detach().cpu().numpy())
                             else:
