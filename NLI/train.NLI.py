@@ -225,7 +225,7 @@ def wordpairID_2_tokenpairID(sentence, wordindex_left, wordindex_right, full_tok
 
     span_token_list = tokenizer.tokenize(span)
     span_id_list = tokenizer.convert_tokens_to_ids(span_token_list)
-    print('span:', span, 'span_id_list:', span_id_list)
+    # print('span:', span, 'span_id_list:', span_id_list)
     if sent_1:
         # for i in range(wordindex_left, len(full_token_id_list)-len(span_id_list)):
         for i in range(wordindex_left, position_two_two):
@@ -234,7 +234,7 @@ def wordpairID_2_tokenpairID(sentence, wordindex_left, wordindex_right, full_tok
 
         return None, None, span_token_list
     else:
-        print('position_two_two:', position_two_two)
+        # print('position_two_two:', position_two_two)
         for i in range(position_two_two+2, len(full_token_id_list)):
             if full_token_id_list[i:i+len(span_id_list)] == span_id_list:
                 return i, i+len(span_id_list), span_token_list
@@ -265,17 +265,18 @@ def convert_examples_to_features(examples, label_list, max_seq_length,
     label_map = {label : i for i, label in enumerate(label_list)}
 
     features = []
+    give_up = 0
     for (ex_index, example) in enumerate(examples):
         if ex_index % 10000 == 0:
             logger.info("Writing example %d of %d" % (ex_index, len(examples)))
 
         tokens_a = tokenizer.tokenize(example.text_a)
-        print('tokens_a:', tokens_a)
+        # print('tokens_a:', tokens_a)
 
         tokens_b = None
         if example.text_b:
             tokens_b = tokenizer.tokenize(example.text_b)
-            print('tokens_b:', tokens_b)
+            # print('tokens_b:', tokens_b)
             # Modifies `tokens_a` and `tokens_b` in place so that the total
             # length is less than the specified length.
             # Account for [CLS], [SEP], [SEP] with "- 3". " -4" for RoBERTa.
@@ -332,28 +333,29 @@ def convert_examples_to_features(examples, label_list, max_seq_length,
         else:
             raise KeyError(output_mode)
 
-        print('input_ids:', input_ids)
-        print('text_a:', example.text_a)
-        print('span_a_left:', example.span_a_left)
-        print('span_a_right:', example.span_a_right)
+        # print('input_ids:', input_ids)
+        # print('text_a:', example.text_a)
+        # print('span_a_left:', example.span_a_left)
+        # print('span_a_right:', example.span_a_right)
 
         span_a_left, span_a_right, span_a_token_list = wordpairID_2_tokenpairID(example.text_a, example.span_a_left, example.span_a_right, input_ids, tokenizer, sent_1=True)
-        print('span_a_left, span_a_right, span_a_token_list:', span_a_left, span_a_right, span_a_token_list)
-        print('text_b:', example.text_b)
-        print('span_b_left:', example.span_b_left)
-        print('span_b_right:', example.span_b_right)
+        # print('span_a_left, span_a_right, span_a_token_list:', span_a_left, span_a_right, span_a_token_list)
+        # print('text_b:', example.text_b)
+        # print('span_b_left:', example.span_b_left)
+        # print('span_b_right:', example.span_b_right)
         span_b_left, span_b_right, span_b_token_list = wordpairID_2_tokenpairID(example.text_b, example.span_b_left, example.span_b_right, input_ids, tokenizer, sent_1=False)
-        print('span_b_left, span_b_right, span_b_token_list:', span_b_left, span_b_right, span_b_token_list)
+        # print('span_b_left, span_b_right, span_b_token_list:', span_b_left, span_b_right, span_b_token_list)
         if span_a_left is None or span_b_left is None:
             '''give up this pair'''
+            give_up+=1
             continue
         else:
-            print('tokens:', tokens)
-            print('span_a_token_list:', span_a_token_list)
-            print(span_a_left, span_a_right)
-            print('span_b_token_list:', span_b_token_list)
-            print(span_b_left, span_b_right)
-            exit(0)
+            # print('tokens:', tokens)
+            # print('span_a_token_list:', span_a_token_list)
+            # print(span_a_left, span_a_right)
+            # print('span_b_token_list:', span_b_token_list)
+            # print(span_b_left, span_b_right)
+            # exit(0)
             span_a_mask = [0]*len(input_ids)
             for i in range(span_a_left, span_a_right):
                 span_a_mask[i]=1
@@ -367,6 +369,7 @@ def convert_examples_to_features(examples, label_list, max_seq_length,
                                   span_a_mask = span_a_mask,
                                   span_b_mask = span_b_mask,
                                   label_id=label_id))
+    print('input example size:', len(examples), ' give_up:', give_up, ' remain:', len(features))
     return features
 
 def _truncate_seq_pair(tokens_a, tokens_b, max_length):
