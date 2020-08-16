@@ -805,7 +805,7 @@ def main():
                                 max_test_acc = f1
 
                             '''write new scores to test file'''
-                            writescore = codecs.open('test_scores_lr_5e7.txt', 'w', 'utf-8')
+                            writescore = codecs.open('test_scores_lr_1e7.txt', 'w', 'utf-8')
                             for id, score in enumerate(score_for_print):
                                 pair_idd = eval_all_pair_ids[id].split('&&')
                                 writescore.write(pair_idd[0]+'\t'+pair_idd[1]+'\t'+str(score)+'\n')
