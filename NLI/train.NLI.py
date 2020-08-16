@@ -770,6 +770,7 @@ def main():
 
                         pred_probs = softmax(preds,axis=1)
                         if idd==1:
+                            '''which label is positiv?'''
                             score_for_print = list(pred_probs[:,0])
                             assert len(eval_all_pair_ids) == len(score_for_print)
                         pred_label_ids = list(np.argmax(pred_probs, axis=1))
@@ -804,7 +805,7 @@ def main():
                                 max_test_acc = f1
 
                             '''write new scores to test file'''
-                            writescore = codecs.open('test_scores.txt', 'w', 'utf-8')
+                            writescore = codecs.open('test_scores_lr_5e7.txt', 'w', 'utf-8')
                             for id, score in enumerate(score_for_print):
                                 pair_idd = eval_all_pair_ids[id].split('&&')
                                 writescore.write(pair_idd[0]+'\t'+pair_idd[1]+'\t'+str(score)+'\n')
