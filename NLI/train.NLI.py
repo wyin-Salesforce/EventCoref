@@ -52,7 +52,7 @@ logger = logging.getLogger(__name__)
 # import torch.nn as nn
 
 bert_hidden_dim = 1024
-pretrain_model_dir = 'roberta-large-mnli' #'roberta-large' , 'roberta-large-mnli', 'bert-large-uncased'
+pretrain_model_dir = 'roberta-large' #'roberta-large' , 'roberta-large-mnli', 'bert-large-uncased'
 
 
 class RobertaForSequenceClassification(nn.Module):
@@ -772,7 +772,7 @@ if __name__ == "__main__":
 
 '''
 
-CUDA_VISIBLE_DEVICES=5 python -u train.NLI.py --task_name rte --do_train --do_lower_case --num_train_epochs 10 --data_dir '' --output_dir '' --train_batch_size 32 --eval_batch_size 80 --learning_rate 1e-6 --max_seq_length 128 --seed 42 --kshot 3 --beta_sampling_times 1
+CUDA_VISIBLE_DEVICES=6 python -u train.NLI.py --task_name rte --do_train --do_lower_case --num_train_epochs 10 --data_dir '' --output_dir '' --train_batch_size 32 --eval_batch_size 80 --learning_rate 1e-6 --max_seq_length 128 --seed 42 --kshot 3 --beta_sampling_times 1
 
 
 '''
