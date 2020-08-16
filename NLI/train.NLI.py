@@ -106,7 +106,7 @@ class RobertaClassificationHead(nn.Module):
 class InputExample(object):
     """A single training/test example for simple sequence classification."""
 
-    def __init__(self, guid, text_a=None, span_a_left=None, span_a_right=None, text_b=None, span_b_left=None, span_b_right=None, label=None):
+    def __init__(self, guid, text_a=None, span_a_left=None, span_a_right=None, text_b=None, span_b_left=None, span_b_right=None, label=None, pair_id=None):
         """Constructs a InputExample.
 
         Args:
@@ -127,6 +127,7 @@ class InputExample(object):
         self.span_b_left = span_b_left
         self.span_b_right = span_b_right
         self.label = label
+        self.pair_id = pair_id
 
 
 class InputFeatures(object):
@@ -195,7 +196,40 @@ class RteProcessor(DataProcessor):
                 if label == 1:
                     pos_size+=1
                 examples.append(
-                    InputExample(guid=guid, text_a=text_a, span_a_left=span_a_left, span_a_right=span_a_right, text_b=text_b, span_b_left=span_b_left, span_b_right=span_b_right, label=label))
+                    InputExample(guid=guid, text_a=text_a, span_a_left=span_a_left, span_a_right=span_a_right, text_b=text_b, span_b_left=span_b_left, span_b_right=span_b_right, label=label, pair_id=None))
+            line_co+=1
+            # if line_co > 20000:
+            #     break
+        readfile.close()
+        print('loaded  size:', len(examples), ' pos_size:', pos_size)
+        return examples
+
+    def get_ECB_plus_NLI_unlabeled_test(self, filename):
+        '''
+        can read the training file, dev and test file
+        '''
+        examples=[]
+        readfile = codecs.open(filename, 'r', 'utf-8')
+        line_co=0
+        pos_size = 0
+        for row in readfile:
+
+            line=row.strip().split('\t')
+            if len(line) == 9:
+                guid = "test-"+str(line_co-1)
+                event_id_1 = line[0].strip()
+                event_id_2 = line[1].strip()
+                text_a = line[2].strip()
+                span_a_left = int(line[3].strip())
+                span_a_right = int(line[4].strip())
+                text_b = line[5].strip()
+                span_b_left = int(line[6].strip())
+                span_b_right = int(line[7].strip())
+                label = int(line[8].strip())
+                if label == 1:
+                    pos_size+=1
+                examples.append(
+                    InputExample(guid=guid, text_a=text_a, span_a_left=span_a_left, span_a_right=span_a_right, text_b=text_b, span_b_left=span_b_left, span_b_right=span_b_right, label=label, pair_id=event_id_1+'&&'+event_id_2))
             line_co+=1
             # if line_co > 20000:
             #     break
@@ -368,7 +402,8 @@ def convert_examples_to_features(examples, label_list, max_seq_length,
                                   segment_ids=segment_ids,
                                   span_a_mask = span_a_mask,
                                   span_b_mask = span_b_mask,
-                                  label_id=label_id))
+                                  label_id=label_id,
+                                  pair_id = example.pair_id))
     print('input example size:', len(examples), ' give_up:', give_up, ' remain:', len(features))
     return features
 
@@ -550,7 +585,7 @@ def main():
 
     train_examples = processor.get_ECB_plus_NLI('/export/home/Dataset/EventCoref/event_2_NLI/training_pairs_for_wenpeng.out') #train_pu_half_v1.txt
     dev_examples = processor.get_ECB_plus_NLI('/export/home/Dataset/EventCoref/event_2_NLI/dev_pairs_for_wenpeng.out')
-    test_examples = []#processor.get_RTE_as_test('/export/home/Dataset/RTE/test_RTE_1235.txt')
+    test_examples =  processor.get_ECB_plus_NLI_unlabeled_test('/export/home/Dataset/EventCoref/event_2_NLI/test_pairs_for_wenpeng.out')
     label_list = [0, 1]
     # train_examples = get_data_hulu_fewshot('train', 5)
     # train_examples, dev_examples, test_examples, label_list = load_CLINC150_with_specific_domain_sequence(args.DomainName, args.kshot, augment=False)
@@ -620,25 +655,28 @@ def main():
 
 
         '''load test set'''
-        # test_features = convert_examples_to_features(
-        #     test_examples, label_list, args.max_seq_length, tokenizer, output_mode,
-        #     cls_token_at_end=False,#bool(args.model_type in ['xlnet']),            # xlnet has a cls token at the end
-        #     cls_token=tokenizer.cls_token,
-        #     cls_token_segment_id=0,#2 if args.model_type in ['xlnet'] else 0,
-        #     sep_token=tokenizer.sep_token,
-        #     sep_token_extra=True,#bool(args.model_type in ['roberta']),           # roberta uses an extra separator b/w pairs of sentences, cf. github.com/pytorch/fairseq/commit/1684e166e3da03f5b600dbb7855cb98ddfcd0805
-        #     pad_on_left=False,#bool(args.model_type in ['xlnet']),                 # pad on the left for xlnet
-        #     pad_token=tokenizer.convert_tokens_to_ids([tokenizer.pad_token])[0],
-        #     pad_token_segment_id=0)#4 if args.model_type in ['xlnet'] else 0,)
-        #
-        # eval_all_input_ids = torch.tensor([f.input_ids for f in test_features], dtype=torch.long)
-        # eval_all_input_mask = torch.tensor([f.input_mask for f in test_features], dtype=torch.long)
-        # eval_all_segment_ids = torch.tensor([f.segment_ids for f in test_features], dtype=torch.long)
-        # eval_all_label_ids = torch.tensor([f.label_id for f in test_features], dtype=torch.long)
-        #
-        # eval_data = TensorDataset(eval_all_input_ids, eval_all_input_mask, eval_all_segment_ids, eval_all_label_ids)
-        # eval_sampler = SequentialSampler(eval_data)
-        # test_dataloader = DataLoader(eval_data, sampler=eval_sampler, batch_size=args.eval_batch_size)
+        test_features = convert_examples_to_features(
+            test_examples, label_list, args.max_seq_length, tokenizer, output_mode,
+            cls_token_at_end=False,#bool(args.model_type in ['xlnet']),            # xlnet has a cls token at the end
+            cls_token=tokenizer.cls_token,
+            cls_token_segment_id=0,#2 if args.model_type in ['xlnet'] else 0,
+            sep_token=tokenizer.sep_token,
+            sep_token_extra=True,#bool(args.model_type in ['roberta']),           # roberta uses an extra separator b/w pairs of sentences, cf. github.com/pytorch/fairseq/commit/1684e166e3da03f5b600dbb7855cb98ddfcd0805
+            pad_on_left=False,#bool(args.model_type in ['xlnet']),                 # pad on the left for xlnet
+            pad_token=tokenizer.convert_tokens_to_ids([tokenizer.pad_token])[0],
+            pad_token_segment_id=0)#4 if args.model_type in ['xlnet'] else 0,)
+
+        eval_all_input_ids = torch.tensor([f.input_ids for f in test_features], dtype=torch.long)
+        eval_all_input_mask = torch.tensor([f.input_mask for f in test_features], dtype=torch.long)
+        eval_all_segment_ids = torch.tensor([f.segment_ids for f in test_features], dtype=torch.long)
+        eval_all_span_a_mask = torch.tensor([f.span_a_mask for f in test_features], dtype=torch.long)
+        eval_all_span_b_mask = torch.tensor([f.span_b_mask for f in test_features], dtype=torch.long)
+        eval_all_pair_ids = [f.pair_id for f in test_features]
+        eval_all_label_ids = torch.tensor([f.label_id for f in test_features], dtype=torch.long)
+
+        eval_data = TensorDataset(eval_all_input_ids, eval_all_input_mask, eval_all_segment_ids, eval_all_span_a_mask, eval_all_span_b_mask, eval_all_label_ids)
+        eval_sampler = SequentialSampler(eval_data)
+        test_dataloader = DataLoader(eval_data, sampler=eval_sampler, batch_size=args.eval_batch_size)
 
         logger.info("***** Running training *****")
         logger.info("  Num examples = %d", len(train_features))
@@ -695,7 +733,7 @@ def main():
                     '''
                     model.eval()
 
-                    for idd, dev_or_test_dataloader in enumerate([dev_dataloader]):
+                    for idd, dev_or_test_dataloader in enumerate([dev_dataloader, test_dataloader]):
 
 
                         if idd == 0:
@@ -703,7 +741,7 @@ def main():
                             logger.info("  Num examples = %d", len(dev_features))
                         else:
                             logger.info("***** Running test *****")
-                            # logger.info("  Num examples = %d", len(test_examples))
+                            logger.info("  Num examples = %d", len(test_features))
                         # logger.info("  Batch size = %d", args.eval_batch_size)
 
                         eval_loss = 0
@@ -730,6 +768,9 @@ def main():
                         preds = preds[0]
 
                         pred_probs = softmax(preds,axis=1)
+                        if idd==1:
+                            score_for_print = list(pred_probs[:,0])
+                            assert len(eval_all_pair_ids) == len(score_for_print)
                         pred_label_ids = list(np.argmax(pred_probs, axis=1))
 
                         gold_label_ids = gold_label_ids
@@ -757,13 +798,20 @@ def main():
                             else:
                                 print('\ndev:', [test_acc, f1], ' max_dev_f1:', max_dev_acc, '\n')
                                 break
-                        # else: # this is test
-                            # if test_acc > max_test_acc:
-                            #     max_test_acc = test_acc
-                            #
-                            # final_test_performance = test_acc
-                            # print('\ntest acc:', test_acc, ' max_test_acc:', max_test_acc, '\n')
-        # print('final_test_performance:', final_test_performance)
+                        else: # this is test
+                            if f1 > max_test_acc:
+                                max_test_acc = f1
+
+                            '''write new scores to test file'''
+                            writescore = codecs.open('test_scores.txt', 'w', 'utf-8')
+                            for id, score in enumerate(score_for_print):
+                                pair_idd = eval_all_pair_ids[id].split('&&')
+                                writescore.write(pair_idd[0]+'\t'+pair_idd[1]+'\t'+str(score)+'\n')
+                            print('test score written over')
+                            writescore.close()
+                            final_test_performance = f1
+                            print('\ntest:', [test_acc, f1], ' max_test_f1:', max_test_acc, '\n')
+        print('final_test_f1:', final_test_performance)
 
 
 
