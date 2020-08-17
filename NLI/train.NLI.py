@@ -55,6 +55,19 @@ bert_hidden_dim = 1024
 pretrain_model_dir = 'roberta-large' #'roberta-large' , 'roberta-large-mnli', 'bert-large-uncased'
 
 
+
+def store_transformers_models(model, tokenizer, output_dir, flag_str):
+    '''
+    store the model
+    '''
+    output_dir+='/'+flag_str
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+    print('starting model storing....')
+    model.save_pretrained(output_dir)
+    tokenizer.save_pretrained(output_dir)
+    print('store succeed')
+
 class RobertaForSequenceClassification(nn.Module):
     def __init__(self, tagset_size):
         super(RobertaForSequenceClassification, self).__init__()
@@ -796,6 +809,11 @@ def main():
                             if f1 > max_dev_acc:
                                 max_dev_acc = f1
                                 print('\ndev:', [test_acc, f1], ' max_dev_f1:', max_dev_acc, '\n')
+                                '''store the model, because we can test after a max_dev acc reached'''
+                                model_to_save = (
+                                    model.module if hasattr(model, "module") else model
+                                )  # Take care of distributed/parallel training
+                                store_transformers_models(model_to_save, tokenizer, '/export/home/Dataset/BERT_pretrained_mine/event_2_nli/', 'f1_'+str(max_dev_acc))
 
                             else:
                                 print('\ndev:', [test_acc, f1], ' max_dev_f1:', max_dev_acc, '\n')
@@ -805,7 +823,7 @@ def main():
                                 max_test_acc = f1
 
                             '''write new scores to test file'''
-                            writescore = codecs.open('test_scores_lr_8e7.txt', 'w', 'utf-8')
+                            writescore = codecs.open('test_scores_lr_'+str(args.learning_rate)+'.txt', 'w', 'utf-8')
                             for id, score in enumerate(score_for_print):
                                 pair_idd = eval_all_pair_ids[id].split('&&')
                                 writescore.write(pair_idd[0]+'\t'+pair_idd[1]+'\t'+str(score)+'\n')
