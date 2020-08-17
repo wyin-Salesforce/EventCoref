@@ -64,7 +64,8 @@ def store_transformers_models(model, tokenizer, output_dir, flag_str):
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
     print('starting model storing....')
-    model.save_pretrained(output_dir)
+    # model.save_pretrained(output_dir)
+    torch.save(model.state_dict(), output_dir)
     tokenizer.save_pretrained(output_dir)
     print('store succeed')
 
@@ -601,7 +602,7 @@ def main():
 
 
 
-    train_examples = processor.get_ECB_plus_NLI('/export/home/Dataset/EventCoref/event_2_NLI/training_pairs_for_wenpeng.out', is_train=True) #train_pu_half_v1.txt
+    train_examples = processor.get_ECB_plus_NLI('/export/home/Dataset/EventCoref/event_2_NLI/training_pairs_for_wenpeng.out', is_train=False) #train_pu_half_v1.txt
     dev_examples = processor.get_ECB_plus_NLI('/export/home/Dataset/EventCoref/event_2_NLI/dev_pairs_for_wenpeng.out', is_train=False)
     test_examples =  processor.get_ECB_plus_NLI_unlabeled_test('/export/home/Dataset/EventCoref/event_2_NLI/test_pairs_for_wenpeng.out')
     label_list = [0, 1]
@@ -745,7 +746,8 @@ def main():
                 global_step += 1
                 iter_co+=1
                 # if iter_co %20==0:
-                if iter_co % (len(train_dataloader)/2)==0:
+                if iter_co % len(train_dataloader)==0:
+                    # if iter_co % (len(train_dataloader)/2)==0:
                     '''
                     start evaluate on dev set after this epoch
                     '''
