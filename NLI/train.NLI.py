@@ -602,7 +602,7 @@ def main():
 
 
 
-    train_examples = processor.get_ECB_plus_NLI('/export/home/Dataset/EventCoref/event_2_NLI/training_pairs_for_wenpeng.out', is_train=False) #train_pu_half_v1.txt
+    train_examples = processor.get_ECB_plus_NLI('/export/home/Dataset/EventCoref/event_2_NLI/training_pairs_for_wenpeng.out', is_train=True) #train_pu_half_v1.txt
     dev_examples = processor.get_ECB_plus_NLI('/export/home/Dataset/EventCoref/event_2_NLI/dev_pairs_for_wenpeng.out', is_train=False)
     test_examples =  processor.get_ECB_plus_NLI_unlabeled_test('/export/home/Dataset/EventCoref/event_2_NLI/test_pairs_for_wenpeng.out')
     label_list = [0, 1]
@@ -746,8 +746,8 @@ def main():
                 global_step += 1
                 iter_co+=1
                 # if iter_co %20==0:
-                if iter_co % len(train_dataloader)==0:
-                    # if iter_co % (len(train_dataloader)/2)==0:
+                # if iter_co % len(train_dataloader)==0:
+                if iter_co % (len(train_dataloader)/2)==0:
                     '''
                     start evaluate on dev set after this epoch
                     '''
@@ -819,7 +819,7 @@ def main():
                                 model_to_save = (
                                     model.module if hasattr(model, "module") else model
                                 )  # Take care of distributed/parallel training
-                                store_transformers_models(model_to_save, tokenizer, '/export/home/Dataset/BERT_pretrained_mine/event_2_nli', 'f1_'+str(max_dev_acc))
+                                store_transformers_models(model_to_save, tokenizer, '/export/home/Dataset/BERT_pretrained_mine/event_2_nli', 'double_train_f1_'+str(max_dev_acc))
 
                             else:
                                 print('\ndev:', [test_acc, f1], ' max_dev_f1:', max_dev_acc, '\n')
@@ -829,7 +829,7 @@ def main():
                                 max_test_acc = f1
 
                             '''write new scores to test file'''
-                            writescore = codecs.open('test_scores_lr_'+str(args.learning_rate)+'.txt', 'w', 'utf-8')
+                            writescore = codecs.open('test_scores_double_train_lr_'+str(args.learning_rate)+'.txt', 'w', 'utf-8')
                             for id, score in enumerate(score_for_print):
                                 pair_idd = eval_all_pair_ids[id].split('&&')
                                 writescore.write(pair_idd[0]+'\t'+pair_idd[1]+'\t'+str(score)+'\n')
