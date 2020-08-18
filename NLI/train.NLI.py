@@ -748,7 +748,7 @@ def main():
                 iter_co+=1
                 # if iter_co %20==0:
                 # if iter_co % len(train_dataloader)==0:
-                if iter_co % (len(train_dataloader)/2)==0:
+                if iter_co % (len(train_dataloader)//2)==0:
                     '''
                     start evaluate on dev set after this epoch
                     '''
