@@ -603,11 +603,9 @@ def main():
 
 
     train_examples = processor.get_ECB_plus_NLI('/export/home/Dataset/EventCoref/event_2_NLI/training_pairs_for_wenpeng.out', is_train=False) #train_pu_half_v1.txt
-    train_examples = train_examples[:1000]
     dev_examples = processor.get_ECB_plus_NLI('/export/home/Dataset/EventCoref/event_2_NLI/dev_pairs_for_wenpeng.out', is_train=False)
-    dev_examples =  dev_examples[:1000]
     test_examples =  processor.get_ECB_plus_NLI_unlabeled_test('/export/home/Dataset/EventCoref/event_2_NLI/test_pairs_for_wenpeng.out')
-    test_examples = test_examples[:1000]
+
     label_list = [0, 1]
     # train_examples = get_data_hulu_fewshot('train', 5)
     # train_examples, dev_examples, test_examples, label_list = load_CLINC150_with_specific_domain_sequence(args.DomainName, args.kshot, augment=False)
