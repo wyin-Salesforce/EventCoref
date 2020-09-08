@@ -602,7 +602,7 @@ def main():
 
 
 
-    train_examples = processor.get_ECB_plus_NLI('/export/home/Dataset/EventCoref/event_2_NLI/training_pairs_for_wenpeng.out', is_train=False) #train_pu_half_v1.txt
+    train_examples = processor.get_ECB_plus_NLI('/export/home/Dataset/EventCoref/event_2_NLI/training_pairs_for_wenpeng.out', is_train=True) #train_pu_half_v1.txt
     dev_examples = processor.get_ECB_plus_NLI('/export/home/Dataset/EventCoref/event_2_NLI/dev_pairs_for_wenpeng.out', is_train=False)
     test_examples =  processor.get_ECB_plus_NLI_unlabeled_test('/export/home/Dataset/EventCoref/event_2_NLI/test_pairs_for_wenpeng.out')
 
@@ -820,7 +820,7 @@ def main():
                                 model_to_save = (
                                     model.module if hasattr(model, "module") else model
                                 )  # Take care of distributed/parallel training
-                                store_transformers_models(model_to_save, tokenizer, '/export/home/Dataset/BERT_pretrained_mine/event_2_nli', 'f1_'+str(max_dev_acc)+'.pt')
+                                store_transformers_models(model_to_save, tokenizer, '/export/home/Dataset/BERT_pretrained_mine/event_2_nli', 'xiaodong_f1_'+str(max_dev_acc)+'.pt')
 
                             else:
                                 print('\ndev:', [test_acc, f1], ' max_dev_f1:', max_dev_acc, '\n')
