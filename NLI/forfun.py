@@ -87,8 +87,8 @@ class RobertaForSequenceClassification(nn.Module):
         # single_train_input_ids, single_train_input_mask, single_train_segment_ids, single_train_label_ids = batch_single
         outputs_single = self.roberta_single(input_ids, input_mask, None)
         output_last_layer_tensor3 = outputs_single[0] #(batch_size, sequence_length, hidden_size)`)
-        span_a_reps = torch.sum(output_last_layer_tensor3*1.0*span_a_mask.unsqueeze(2), dim=1) #(batch, hidden)
-        span_b_reps = torch.sum(output_last_layer_tensor3*1.0*span_b_mask.unsqueeze(2), dim=1) #(batch, hidden)
+        span_a_reps = torch.sum(output_last_layer_tensor3*span_a_mask.unsqueeze(2), dim=1) #(batch, hidden)
+        span_b_reps = torch.sum(output_last_layer_tensor3*span_b_mask.unsqueeze(2), dim=1) #(batch, hidden)
         combined_rep = torch.cat([span_a_reps, span_b_reps, span_a_reps*span_b_reps],dim=1) #(batch, 3*hidden)
         MLP_input = torch.tanh(self.hidden_layer_0(combined_rep))#(batch, hidden)
 
@@ -689,8 +689,8 @@ def main():
         eval_all_input_ids = torch.tensor([f.input_ids for f in test_features], dtype=torch.long)
         eval_all_input_mask = torch.tensor([f.input_mask for f in test_features], dtype=torch.long)
         eval_all_segment_ids = torch.tensor([f.segment_ids for f in test_features], dtype=torch.long)
-        eval_all_span_a_mask = torch.tensor([f.span_a_mask for f in test_features], dtype=torch.long)
-        eval_all_span_b_mask = torch.tensor([f.span_b_mask for f in test_features], dtype=torch.long)
+        eval_all_span_a_mask = torch.tensor([f.span_a_mask for f in test_features], dtype=torch.float)
+        eval_all_span_b_mask = torch.tensor([f.span_b_mask for f in test_features], dtype=torch.float)
         eval_all_pair_ids = [f.pair_id for f in test_features]
         eval_all_label_ids = torch.tensor([f.label_id for f in test_features], dtype=torch.long)
 
@@ -705,8 +705,8 @@ def main():
         all_input_ids = torch.tensor([f.input_ids for f in train_features], dtype=torch.long)
         all_input_mask = torch.tensor([f.input_mask for f in train_features], dtype=torch.long)
         all_segment_ids = torch.tensor([f.segment_ids for f in train_features], dtype=torch.long)
-        all_span_a_mask = torch.tensor([f.span_a_mask for f in train_features], dtype=torch.long)
-        all_span_b_mask = torch.tensor([f.span_b_mask for f in train_features], dtype=torch.long)
+        all_span_a_mask = torch.tensor([f.span_a_mask for f in train_features], dtype=torch.float)
+        all_span_b_mask = torch.tensor([f.span_b_mask for f in train_features], dtype=torch.float)
 
         all_label_ids = torch.tensor([f.label_id for f in train_features], dtype=torch.long)
 
