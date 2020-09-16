@@ -75,7 +75,7 @@ class RobertaForSequenceClassification(nn.Module):
         self.tagset_size = tagset_size
 
         self.roberta_single= RobertaModel.from_pretrained(pretrain_model_dir)
-        # self.roberta_single.load_state_dict(torch.load('/export/home/Dataset/BERT_pretrained_mine/MNLI_pretrained/_acc_0.9040886899918633.pt'), strict=False)
+        self.roberta_single.load_state_dict(torch.load('/export/home/Dataset/BERT_pretrained_mine/MNLI_pretrained/_acc_0.9040886899918633.pt'), strict=False)
         self.hidden_layer_0 = nn.Linear(bert_hidden_dim*3, bert_hidden_dim)
         self.hidden_layer_1 = nn.Linear(bert_hidden_dim, bert_hidden_dim)
         self.hidden_layer_2 = nn.Linear(bert_hidden_dim, bert_hidden_dim)
@@ -821,7 +821,7 @@ def main():
                                 model_to_save = (
                                     model.module if hasattr(model, "module") else model
                                 )  # Take care of distributed/parallel training
-                                store_transformers_models(model_to_save, tokenizer, '/export/home/Dataset/BERT_pretrained_mine/event_2_nli', 'roberta-large-mnli_f1_'+str(max_dev_acc)+'.pt')
+                                store_transformers_models(model_to_save, tokenizer, '/export/home/Dataset/BERT_pretrained_mine/event_2_nli', 'mnli_mypretrained_f1_'+str(max_dev_acc)+'.pt')
 
                             else:
                                 print('\ndev:', [test_acc, f1], ' max_dev_f1:', max_dev_acc, '\n')
@@ -831,7 +831,7 @@ def main():
                                 max_test_acc = f1
 
                             '''write new scores to test file'''
-                            writescore = codecs.open('test_scores_roberta-large-mnli_lr_'+str(args.learning_rate)+'.txt', 'w', 'utf-8')
+                            writescore = codecs.open('test_scores_mnli_mypretrained_lr_'+str(args.learning_rate)+'.txt', 'w', 'utf-8')
                             for id, score in enumerate(score_for_print):
                                 pair_idd = eval_all_pair_ids[id].split('&&')
                                 writescore.write(pair_idd[0]+'\t'+pair_idd[1]+'\t'+str(score)+'\n')
