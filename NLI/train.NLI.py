@@ -75,7 +75,7 @@ class RobertaForSequenceClassification(nn.Module):
         self.tagset_size = tagset_size
 
         self.roberta_single= RobertaModel.from_pretrained(pretrain_model_dir)
-        self.roberta_single.load_state_dict(torch.load('/export/home/Dataset/BERT_pretrained_mine/MNLI_pretrained/_acc_0.9040886899918633.pt'), strict=False)
+        # self.roberta_single.load_state_dict(torch.load('/export/home/Dataset/BERT_pretrained_mine/MNLI_pretrained/_acc_0.9040886899918633.pt'), strict=False)
         self.hidden_layer_0 = nn.Linear(bert_hidden_dim*3, bert_hidden_dim)
         self.hidden_layer_1 = nn.Linear(bert_hidden_dim, bert_hidden_dim)
         self.hidden_layer_2 = nn.Linear(bert_hidden_dim, bert_hidden_dim)
