@@ -52,7 +52,7 @@ logger = logging.getLogger(__name__)
 # import torch.nn as nn
 
 bert_hidden_dim = 1024
-pretrain_model_dir = 'roberta-large' #'roberta-large' , 'roberta-large-mnli', 'bert-large-uncased'
+pretrain_model_dir = 'roberta-large-mnli' #'roberta-large' , 'roberta-large-mnli', 'bert-large-uncased'
 
 
 
@@ -820,7 +820,7 @@ def main():
                                 model_to_save = (
                                     model.module if hasattr(model, "module") else model
                                 )  # Take care of distributed/parallel training
-                                store_transformers_models(model_to_save, tokenizer, '/export/home/Dataset/BERT_pretrained_mine/event_2_nli', 'xiaodong_f1_'+str(max_dev_acc)+'.pt')
+                                store_transformers_models(model_to_save, tokenizer, '/export/home/Dataset/BERT_pretrained_mine/event_2_nli', 'roberta-large-mnli_f1_'+str(max_dev_acc)+'.pt')
 
                             else:
                                 print('\ndev:', [test_acc, f1], ' max_dev_f1:', max_dev_acc, '\n')
@@ -830,7 +830,7 @@ def main():
                                 max_test_acc = f1
 
                             '''write new scores to test file'''
-                            writescore = codecs.open('test_scores_lr_'+str(args.learning_rate)+'.txt', 'w', 'utf-8')
+                            writescore = codecs.open('test_scores_roberta-large-mnli_lr_'+str(args.learning_rate)+'.txt', 'w', 'utf-8')
                             for id, score in enumerate(score_for_print):
                                 pair_idd = eval_all_pair_ids[id].split('&&')
                                 writescore.write(pair_idd[0]+'\t'+pair_idd[1]+'\t'+str(score)+'\n')
@@ -846,7 +846,7 @@ if __name__ == "__main__":
 
 '''
 
-CUDA_VISIBLE_DEVICES=6 python -u train.NLI.py --task_name rte --do_train --do_lower_case --num_train_epochs 10 --data_dir '' --output_dir '' --train_batch_size 32 --eval_batch_size 80 --learning_rate 1e-6 --max_seq_length 128 --seed 42 --kshot 3 --beta_sampling_times 1
+CUDA_VISIBLE_DEVICES=0 python -u train.NLI.py --task_name rte --do_train --do_lower_case --num_train_epochs 10 --data_dir '' --output_dir '' --train_batch_size 32 --eval_batch_size 80 --learning_rate 1e-6 --max_seq_length 128 --seed 42 --kshot 3 --beta_sampling_times 1
 
 
 '''
