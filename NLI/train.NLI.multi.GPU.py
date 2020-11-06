@@ -491,11 +491,11 @@ def main():
     parser.add_argument("--do_lower_case",
                         action='store_true',
                         help="Set this flag if you are using an uncased model.")
-    parser.add_argument("--train_batch_size",
+    parser.add_argument("--per_gpu_train_batch_size",
                         default=16,
                         type=int,
                         help="Total batch size for training.")
-    parser.add_argument("--eval_batch_size",
+    parser.add_argument("--per_gpu_eval_batch_size",
                         default=64,
                         type=int,
                         help="Total batch size for eval.")
@@ -573,7 +573,8 @@ def main():
         raise ValueError("Invalid gradient_accumulation_steps parameter: {}, should be >= 1".format(
                             args.gradient_accumulation_steps))
 
-    args.train_batch_size = args.train_batch_size // args.gradient_accumulation_steps
+    args.train_batch_size = = args.per_gpu_train_batch_size * max(1, n_gpu)
+    args.eval_batch_size = args.per_gpu_eval_batch_size * max(1, n_gpu)
 
     random.seed(args.seed)
     np.random.seed(args.seed)
@@ -617,6 +618,9 @@ def main():
     tokenizer = RobertaTokenizer.from_pretrained(pretrain_model_dir, do_lower_case=args.do_lower_case)
 
     model.to(device)
+
+    if n_gpu > 1:
+        model = torch.nn.DataParallel(model)
 
     param_optimizer = list(model.named_parameters())
     no_decay = ['bias', 'LayerNorm.bias', 'LayerNorm.weight']
@@ -728,8 +732,6 @@ def main():
 
                 if n_gpu > 1:
                     loss = loss.mean() # mean() to average on multi-gpu.
-                if args.gradient_accumulation_steps > 1:
-                    loss = loss / args.gradient_accumulation_steps
 
                 loss.backward()
 
@@ -841,7 +843,7 @@ if __name__ == "__main__":
 
 '''
 
-CUDA_VISIBLE_DEVICES=0 python -u train.NLI.py --task_name rte --do_train --do_lower_case --num_train_epochs 20 --data_dir '' --output_dir '' --train_batch_size 32 --eval_batch_size 80 --learning_rate 1e-6 --max_seq_length 128 --seed 42 --kshot 3 --beta_sampling_times 1
+CUDA_VISIBLE_DEVICES=0 python -u train.NLI.py --task_name rte --do_train --do_lower_case --num_train_epochs 20 --data_dir '' --output_dir '' --per_gpu_train_batch_size 32 --per_gpu_eval_batch_size 80 --learning_rate 1e-6 --max_seq_length 128 --seed 42 --kshot 3 --beta_sampling_times 1
 
 
 '''
