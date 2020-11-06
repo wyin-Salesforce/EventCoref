@@ -573,7 +573,7 @@ def main():
         raise ValueError("Invalid gradient_accumulation_steps parameter: {}, should be >= 1".format(
                             args.gradient_accumulation_steps))
 
-    args.train_batch_size = = args.per_gpu_train_batch_size * max(1, n_gpu)
+    args.train_batch_size = args.per_gpu_train_batch_size * max(1, n_gpu)
     args.eval_batch_size = args.per_gpu_eval_batch_size * max(1, n_gpu)
 
     random.seed(args.seed)
@@ -843,7 +843,7 @@ if __name__ == "__main__":
 
 '''
 
-CUDA_VISIBLE_DEVICES=0 python -u train.NLI.py --task_name rte --do_train --do_lower_case --num_train_epochs 20 --data_dir '' --output_dir '' --per_gpu_train_batch_size 32 --per_gpu_eval_batch_size 80 --learning_rate 1e-6 --max_seq_length 128 --seed 42 --kshot 3 --beta_sampling_times 1
+CUDA_VISIBLE_DEVICES=0 python -u train.NLI.multi.GPU.py --task_name rte --do_train --do_lower_case --num_train_epochs 20 --data_dir '' --output_dir '' --per_gpu_train_batch_size 32 --per_gpu_eval_batch_size 80 --learning_rate 1e-6 --max_seq_length 128 --seed 42 --kshot 3 --beta_sampling_times 1
 
 
 '''
