@@ -26,6 +26,7 @@ import sys
 import codecs
 import numpy as np
 import torch
+
 import torch.nn as nn
 from collections import defaultdict
 from torch.utils.data import (DataLoader, RandomSampler, SequentialSampler,
@@ -617,10 +618,12 @@ def main():
     model = RobertaForSequenceClassification(num_labels)
     tokenizer = RobertaTokenizer.from_pretrained(pretrain_model_dir, do_lower_case=args.do_lower_case)
 
-    model.to(device)
-
     if n_gpu > 1:
         model = torch.nn.DataParallel(model)
+        
+    model.to(device)
+
+
 
     param_optimizer = list(model.named_parameters())
     no_decay = ['bias', 'LayerNorm.bias', 'LayerNorm.weight']
