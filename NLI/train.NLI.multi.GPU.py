@@ -558,21 +558,10 @@ def main():
         "rte": "classification"
     }
 
-    if args.local_rank == -1 or args.no_cuda:
-        device = torch.device("cuda" if torch.cuda.is_available() and not args.no_cuda else "cpu")
-        n_gpu = torch.cuda.device_count()
-    else:
-        torch.cuda.set_device(args.local_rank)
-        device = torch.device("cuda", args.local_rank)
-        n_gpu = 1
-        # Initializes the distributed backend which will take care of sychronizing nodes/GPUs
-        torch.distributed.init_process_group(backend='nccl')
-    logger.info("device: {} n_gpu: {}, distributed training: {}, 16-bits training: {}".format(
-        device, n_gpu, bool(args.local_rank != -1), args.fp16))
 
-    if args.gradient_accumulation_steps < 1:
-        raise ValueError("Invalid gradient_accumulation_steps parameter: {}, should be >= 1".format(
-                            args.gradient_accumulation_steps))
+    device = torch.device("cuda")
+    n_gpu = torch.cuda.device_count()
+
 
     args.train_batch_size = args.per_gpu_train_batch_size * max(1, n_gpu)
     args.eval_batch_size = args.per_gpu_eval_batch_size * max(1, n_gpu)
@@ -580,8 +569,7 @@ def main():
     random.seed(args.seed)
     np.random.seed(args.seed)
     torch.manual_seed(args.seed)
-    if n_gpu > 0:
-        torch.cuda.manual_seed_all(args.seed)
+    torch.cuda.manual_seed_all(args.seed)
 
     if not args.do_train and not args.do_eval:
         raise ValueError("At least one of `do_train` or `do_eval` must be True.")
@@ -604,23 +592,14 @@ def main():
     test_examples =  processor.get_ECB_plus_NLI_unlabeled_test('/export/home/Dataset/EventCoref/event_2_NLI/test_pairs_for_wenpeng.out')
 
     label_list = [0, 1]
-    # train_examples = get_data_hulu_fewshot('train', 5)
-    # train_examples, dev_examples, test_examples, label_list = load_CLINC150_with_specific_domain_sequence(args.DomainName, args.kshot, augment=False)
     num_labels = len(label_list)
     print('num_labels:', num_labels, 'training size:', len(train_examples), 'dev size:', len(dev_examples), 'test size:', len(test_examples))
-
-    num_train_optimization_steps = None
-    num_train_optimization_steps = int(
-        len(train_examples) / args.train_batch_size / args.gradient_accumulation_steps) * args.num_train_epochs
-    if args.local_rank != -1:
-        num_train_optimization_steps = num_train_optimization_steps // torch.distributed.get_world_size()
 
     model = RobertaForSequenceClassification(num_labels)
     tokenizer = RobertaTokenizer.from_pretrained(pretrain_model_dir, do_lower_case=args.do_lower_case)
 
     if n_gpu > 1:
-
-        model = torch.nn.DataParallel(model, device_ids=[0, 1, 2])
+        model = torch.nn.DataParallel(model)
 
     model.to(device)
 
@@ -704,7 +683,6 @@ def main():
         logger.info("***** Running training *****")
         logger.info("  Num examples = %d", len(train_features))
         logger.info("  Batch size = %d", args.train_batch_size)
-        logger.info("  Num steps = %d", num_train_optimization_steps)
         all_input_ids = torch.tensor([f.input_ids for f in train_features], dtype=torch.long)
         all_input_mask = torch.tensor([f.input_mask for f in train_features], dtype=torch.long)
         all_segment_ids = torch.tensor([f.segment_ids for f in train_features], dtype=torch.long)
