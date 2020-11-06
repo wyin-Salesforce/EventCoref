@@ -619,8 +619,9 @@ def main():
     tokenizer = RobertaTokenizer.from_pretrained(pretrain_model_dir, do_lower_case=args.do_lower_case)
 
     if n_gpu > 1:
-        model = torch.nn.DataParallel(model)
-        
+
+        model = torch.nn.DataParallel(model, device_ids=[0, 1, 2])
+
     model.to(device)
 
 
